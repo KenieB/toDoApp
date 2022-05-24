@@ -15,6 +15,7 @@ node_modules/
 
 # production
 dist/
+build/
 
 # Editor directories and files
 .vscode/*
@@ -26,7 +27,6 @@ dist/
 *.njsproj
 *.sln
 *.sw?
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env
+.env.*
+!.env.sample

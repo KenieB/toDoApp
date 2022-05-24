@@ -22,7 +22,7 @@ function Home({ activeUser, setActiveUser }) {
     <>
       <Row>
         <Col xs={{ span: 10, offset: 1 }} md={{ span: 8, offset: 2 }}>
-          <h1 className="display-1">HOME</h1>
+          <h1 className="display-1 text-center">HOME</h1>
         </Col>
       </Row>
     </>
