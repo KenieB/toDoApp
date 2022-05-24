@@ -16,12 +16,11 @@ const app = express();
 
 app.use(logger);
 app.use(cors());
-/*
-app.use(express.static(path.join(__dirname, "..", "..", "to-do-client", "dist")));
+
 app.get("/", (req, res) =>
-  res.sendFile(path.resolve(__dirname, "..", "..", "to-do-client", "dist", "index.html"))
+  res.status(200).json({ message: "To-Do App Server" })
 );
-*/
+
 app.use(express.json());
 
 app.use("/to-do", todoItemsRouter);
