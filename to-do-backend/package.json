@@ -1,0 +1,33 @@
+{
+  "name": "to-do-app-backend",
+  "version": "1.0.0",
+  "description": "To Do List App backend",
+  "keywords": [],
+  "author": "Kenie Betts",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "src/server.js",
+  "engines": {
+    "npm": "8.5.0",
+    "node": "16.14.2"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "start:dev": "nodemon src/server.js | pino-pretty",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "knex": "^2.0.0",
+    "nanoid": "^3.3.4",
+    "pg": "^8.7.3",
+    "pino": "^7.11.0",
+    "pino-http": "^7.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16",
+    "pino-pretty": "^7.6.1"
+  }
+}

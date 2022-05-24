@@ -1,0 +1,20 @@
+{
+  "name": "to-do-app",
+  "version": "1.0.0",
+  "description": "To Do List App",
+  "keywords": [],
+  "author": "Kenie Betts",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "npm run build --prefix ./to-do-client",
+    "preinstall": "cd to-do-backend && npm install",
+    "install": "cd to-do-client && npm install",
+    "start": "npx concurrently \"npm run start:backend\" \"npm run start:client\"",
+    "start:backend": "npm run start --prefix ./to-do-backend",
+    "start:client": "npm run dev --prefix ./to-do-client",
+    "start:dev": "npx concurrently \"npm run start:dev --prefix ./to-do-backend\" \"npm run start:client\""
+  },
+  "dependencies": {
+    "concurrently": "^7.2.1"
+  }
+}
