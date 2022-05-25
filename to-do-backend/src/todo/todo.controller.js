@@ -1,5 +1,5 @@
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
-const todoItemsService = require("./todoItems.service");
+const todoItemsService = require("./todo.service");
 
 //CRUD methods
 async function list(req, res) {

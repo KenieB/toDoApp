@@ -1,5 +1,5 @@
 const router = require("express").Router({ mergeParams: true });
-const controller = require("./todoItems.controller");
+const controller = require("./todo.controller");
 const methodNotAllowed = require("../errors/methodNotAllowed");
 
 router.route("/").get(controller.list).all(methodNotAllowed);

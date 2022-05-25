@@ -1,6 +1,6 @@
 const knex = require("../db/connection");
 
-function list(viewDate) {
+function list() {
   return knex("todo_items").select("*");
 }
 

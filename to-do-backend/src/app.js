@@ -9,8 +9,8 @@ const errorHandler = require("./errors/errorHandler");
 const notFound = require("./errors/notFound");
 const logger = require("./config/logger");
 
-const todoItemsRouter = require("./todoItems/todoItems.router");
-const itemTagsRouter = require("./itemTags/itemTags.router");
+const usersRouter = require("./users/users.router");
+const todoRouter = require("./todo/todo.router");
 
 const app = express();
 
@@ -23,7 +23,8 @@ app.get("/", (req, res) =>
 
 app.use(express.json());
 
-app.use("/to-do", todoItemsRouter);
+app.use("/users", usersRouter);
+app.use("/to-do", todoRouter);
 
 app.use(notFound);
 app.use(errorHandler);
