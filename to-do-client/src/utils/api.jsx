@@ -55,8 +55,9 @@ async function fetchJson(url, options, onCancel) {
 export async function loadList(signal) {
   const url = new URL(`${API_BASE_URL}/to-do`);
   const options = {
+    credentials: "include",
     headers,
     signal,
   };
   return await fetchJson(url, options, []);
-} 
+}
