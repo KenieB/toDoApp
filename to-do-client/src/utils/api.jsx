@@ -43,16 +43,60 @@ async function fetchJson(url, options, onCancel) {
 }
 
 /**
+ * Saves new user to database
+ * @param {object<newUser>}
+ *  the object containing new user data
+ * @param {AbortController.signal<signal>}
+ *  optional AbortController.signal
+ * @returns {Promise<user_id>}
+ *  a promise that resolves to the user_id of the newly created user.
+ */
+
+export async function registerNewUser(newUser, signal) {
+  const url = new URL(`${API_BASE_URL}/users/register`);
+  const options = {
+    credentials: "include",
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: newUser }),
+    signal,
+  };
+  return await fetchJson(url, options, []);
+}
+
+/**
+ * Validate credentials for specified user 
+ * @param {object<userCredentials>}
+ *  the object containing user credentials
+ * @param {AbortController.signal<signal>}
+ *  optional AbortController.signal
+ * @returns {Promise<user_id>}
+ *  a promise that resolves to the user_id of the validated existing user.
+ */
+
+export async function loginUser(userCredentials, signal) {
+  const url = new URL(`${API_BASE_URL}/users/login`);
+  const options = {
+    credentials: "include",
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: userCredentials }),
+    signal,
+  };
+  return await fetchJson(url, options, []);
+}
+
+/**
  * Retrieves existing to-do list for user with specified `userId`
  * @param {string<userId>}
- *  the `reservation_date` matching desired reservation(s)
+ *  the `user_id` matching desired to-do list items(s)
  * @param {AbortController.signal<signal>}
  *  optional AbortController.signal
  * @returns {Promise<[toDoList]>}
- *  a promise that resolves to a possibly empty array of to-do list items with `userId`===`userId` saved in the database.
+ *  a promise that resolves to a possibly empty array of to-do list items with `user_id`===`userId` saved in the database.
  */
 
-export async function loadList(signal) {
+export async function loadList(userId, signal) {
   const url = new URL(`${API_BASE_URL}/to-do`);
   const options = {
     credentials: "include",
