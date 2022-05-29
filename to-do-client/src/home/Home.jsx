@@ -1,84 +1,66 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import "./Home.css";
-import UserAccess from "../userAccess/UserAccess";
-//import { listStudents } from "../utils/api";
-//import StudentsList from "./StudentsList";
+import "../App.css";
 
-function Home({ activeUser, setActiveUser, newUserFlag, setNewUserFlag }) {
-  /*useEffect(() => {
-    const abortController = new AbortController();
-    async function loadStudents() {
-      try {
-        const response = await listStudents(abortController.signal);
-        setStudents(response.students);
-      } catch (error) {
-        setStudentsError(error);
-      }
-    }
-    loadStudents();
-    return () => abortController.abort();
-  }, [students, studentsError]);*/
+function Home() {
+  const navigate = useNavigate();
 
-  if (activeUser) {
-    return (
-      <>
-        <Row id="app-header-row">
-          <Col id="app-header-col">
-            <h1
-              id="app-header"
-              className="display-1 text-center"
-              style={{ fontVariant: "small-caps" }}
+  const clickHandler = (event) => {
+    event.preventDefault();
+    navigate("/user");
+  };
+
+  const entryBtnStyle = {
+    fontVariant: "small-caps",
+    fontSize: "1.75rem",
+  };
+
+  return (
+    <Container className="d-flex justify-content-center h-100">
+      <Row>
+        <Col className="d-flex align-items-center">
+          <Container fluid>
+            <Row id="td-app-header-row">
+              <Col id="td-app-header-col">
+                <h1
+                  id="td-app-header"
+                  className="display-1 text-center"
+                  style={{ fontVariant: "small-caps" }}
+                >
+                  Welcome to Your
+                  <br className="d-block d-md-none" />
+                  <span className="d-none d-md-block"> </span>To-Do List!
+                </h1>
+                <hr className="border rounded-2" style={{ height: "0.5em" }} />
+              </Col>
+            </Row>
+            <Container
+              id="home-entry-container"
+              fluid
+              className="d-flex h-25 px-0 pb-5 justify-content-center align-content-stretch"
             >
-              {activeUser.first_name}'s To-Do List
-            </h1>
-            <hr className="border rounded-2" style={{ height: "0.5em" }} />
-          </Col>
-        </Row>
-        <Container
-          id="app-content-container"
-          fluid
-          className="d-flex h-75 px-0 pb-5 justify-content-center"
-        >
-          <Row
-            id="app-content-container-row"
-            className="justify-content-center align-content-center gap-3 gap-md-4 gap-lg-5"
-          >
-            <h1>UserToDoList-jsx Here</h1>
-          </Row>
-        </Container>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <Row id="app-header-row">
-          <Col id="app-header-col">
-            <h1
-              id="app-header"
-              className="display-1 text-center"
-              style={{ fontVariant: "small-caps" }}
-            >
-              My To-Do List
-            </h1>
-            <hr className="border rounded-2" style={{ height: "0.5em" }} />
-          </Col>
-        </Row>
-        <Container
-          id="app-content-container"
-          fluid
-          className="d-flex h-75 px-0 pb-5 justify-content-center"
-        >
-          <Row
-            id="app-content-container-row"
-            className="justify-content-center align-content-center gap-3 gap-md-4 gap-lg-5"
-          >
-            <UserAccess setActiveUser={setActiveUser} newUserFlag={newUserFlag} setNewUserFlag={setNewUserFlag} />
-          </Row>
-        </Container>
-      </>
-    );
-  }
+              <Row
+                id="home-entry-container-row"
+                className="justify-content-center"
+              >
+                <Col id="home-entry-container-col">
+                  <Button
+                    variant="outline-success"
+                    onClick={clickHandler}
+                    className="flex-fill lh-lg"
+                    style={entryBtnStyle}
+                  >
+                    Get Started
+                  </Button>
+                </Col>
+              </Row>
+            </Container>
+          </Container>
+        </Col>
+      </Row>
+    </Container>
+  );
 }
 
 export default Home;

@@ -1,0 +1,19 @@
+#td-app-header {
+  font-size: calc(1.625rem + 2.5vw);
+}
+#td-app-intro-header {
+  font-size: 0.96rem;
+}
+@media (min-width: 576px) {
+  #td-app-header {
+    font-size: calc(1.625rem + 3.5vw);
+  }
+  #td-app-intro-header {
+    font-size: 1.65rem;
+  }
+}
+@media (min-width: 992px) {
+  #td-app-intro-header {
+    font-size: 2rem;
+  }
+}

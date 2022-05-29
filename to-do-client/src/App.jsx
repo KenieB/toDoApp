@@ -4,18 +4,40 @@ import { Container } from "react-bootstrap";
 import Layout from "./layout/Layout";
 import Home from "./home/Home";
 import NotFound from "./NotFound";
+import UserView from "./userView/UserView";
 
 function App() {
   const [newUserFlag, setNewUserFlag] = useState(false);
-  const [activeUser, setActiveUser] = useState(null);
-  const [userToDoList, setUserToDoList] = useState([]);
+  const [activeUser, setActiveUser] = useState({});
+  const [hasAccessToken, setHasAccessToken] = useState(false);
+  const [userTodoList, setUserTodoList] = useState([]);
+  const [appErr, setAppErr] = useState(null);
 
   return (
-    <Container fluid className="App justify-content-center m-0" id="root-app-container">
+    <Container
+      fluid
+      className="App justify-content-center m-0"
+      id="root-app-container"
+    >
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<Home activeUser={activeUser} setActiveUser={setActiveUser} newUserFlag={newUserFlag} setNewUserFlag={setNewUserFlag} />} />
+          <Route index element={<Home />} />
           <Route path="home" element={<Navigate to="/" replace />} />
+          <Route
+            path="user"
+            element={
+              <UserView
+                activeUser={activeUser}
+                setActiveUser={setActiveUser}
+                hasAccessToken={hasAccessToken}
+                setHasAccessToken={setHasAccessToken}
+                newUserFlag={newUserFlag}
+                setNewUserFlag={setNewUserFlag}
+                appErr={appErr}
+                setAppErr={setAppErr}
+              />
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

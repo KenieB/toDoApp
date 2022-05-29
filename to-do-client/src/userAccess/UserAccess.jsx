@@ -1,27 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import ErrorAlert from "../layout/ErrorAlert";
 
-function UserAccess({ setActiveUser, newUserFlag, setNewUserFlag }) {
-  
+function UserAccess({ activeUser, setNewUserFlag, appErr, setAppErr }) {
   const navigate = useNavigate();
+
   //User Access Button Click Handlers
-  // Register => setNewUserFlag(true) + navigate("register")
-  // Login => navigate("login")
+  const loginClickHandler = (event) => {
+    event.preventDefault();
+    setAppErr(null);
+    navigate("/user/login");
+  };
+  const registerClickHandler = (event) => {
+    event.preventDefault();
+    setNewUserFlag(true);
+    setAppErr(null);
+    navigate("/user/register");
+  };
+
   return (
     <>
-      <Row id="app-intro-row">
-        <Col id="app-intro-col">
-          <h6 className="display-6 text-center" id="app-intro-header">
-            To access or create your to-do list,
+      <Row>
+        <Col>
+          <ErrorAlert error={appErr} />
+        </Col>
+      </Row>
+      <Row id="td-app-intro-row" className="mb-2 mb-md-5">
+        <Col id="td-app-intro-col">
+          <h6 className="display-6 text-center" id="td-app-intro-header">
+            Please login or register to
             <br />
-            please login or register:
+            access or create your to-do list:
           </h6>
         </Col>
       </Row>
-      <Row id="user-access-row">
+      <Row id="user-access-row" className="my-2 my-md-5">
         <Col xs={{ span: 10, offset: 1 }} id="user-access-col">
-          {/*START - UserAccessForm-jsx */}
           <Row className="gap-3 gap-md-0" id="user-access-btn-row">
             <Col className="px-0" id="user-access-btn-col-rgstr">
               <Container
@@ -33,6 +48,7 @@ function UserAccess({ setActiveUser, newUserFlag, setNewUserFlag }) {
                   className="fs-4 fs-md-2 flex-fill"
                   style={{ fontVariant: "small-caps" }}
                   id="user-access-btn-rgstr"
+                  onClick={registerClickHandler}
                 >
                   Register
                 </Button>
@@ -48,13 +64,13 @@ function UserAccess({ setActiveUser, newUserFlag, setNewUserFlag }) {
                   className="fs-4 fs-md-2 flex-fill"
                   style={{ fontVariant: "small-caps" }}
                   id="user-access-btn-login"
+                  onClick={loginClickHandler}
                 >
                   Login
                 </Button>
               </Container>
             </Col>
           </Row>
-          {/*END - UserAccessForm-jsx */}
         </Col>
       </Row>
     </>
