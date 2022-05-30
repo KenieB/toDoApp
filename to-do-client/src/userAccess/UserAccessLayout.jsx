@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Outlet } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
 import ErrorAlert from "../layout/ErrorAlert";
 
 function UserAccessLayout({
@@ -11,7 +11,7 @@ function UserAccessLayout({
   newUserFlag,
   setNewUserFlag,
   appErr,
-  setAppErr,
+  setAppErr
 }) {
   /*
         useEffect(() => {
@@ -22,7 +22,16 @@ function UserAccessLayout({
     */
   return (
     <>
-      <h1>UserAccessLayout</h1>
+      <Container className="d-flex justify-content-center h-100">
+        <Row>
+          <Col className="d-flex align-items-center">
+            <Container fluid>
+              <h1>UserAccessLayout</h1>
+              <Outlet />
+            </Container>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 }

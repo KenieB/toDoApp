@@ -10,13 +10,13 @@ function UserAccessPrompt({ activeUser, setNewUserFlag, appErr, setAppErr }) {
   const loginClickHandler = (event) => {
     event.preventDefault();
     setAppErr(null);
-    navigate("/user/login");
+    navigate("/access/login");
   };
   const registerClickHandler = (event) => {
     event.preventDefault();
     setNewUserFlag(true);
     setAppErr(null);
-    navigate("/user/register");
+    navigate("/access/register");
   };
 
   return (
