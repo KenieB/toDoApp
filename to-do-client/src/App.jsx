@@ -33,8 +33,6 @@ function App() {
                 activeUser={activeUser}
                 setActiveUser={setActiveUser}
                 hasAccessToken={hasAccessToken}
-                setHasAccessToken={setHasAccessToken}
-                newUserFlag={newUserFlag}
                 setNewUserFlag={setNewUserFlag}
                 appErr={appErr}
                 setAppErr={setAppErr}
@@ -66,6 +64,7 @@ function App() {
                   setHasAccessToken={setHasAccessToken}
                   appErr={appErr}
                   setAppErr={setAppErr}
+                  newUserFlag={newUserFlag}
                 />
               }
             />
@@ -79,6 +78,7 @@ function App() {
                   setHasAccessToken={setHasAccessToken}
                   appErr={appErr}
                   setAppErr={setAppErr}
+                  newUserFlag={newUserFlag}
                 />
               }
             />

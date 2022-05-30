@@ -11,22 +11,27 @@ function UserAccessLayout({
   newUserFlag,
   setNewUserFlag,
   appErr,
-  setAppErr
+  setAppErr,
 }) {
   /*
-        useEffect(() => {
-            if (activeUser.first_name && !hasAccessToken) {
-                setAppErr(new Error("Invalid session. Please login again to validate."));
-            }
-        }, [activeUser, hasAccessToken]);
-    */
+    
+  */
   return (
     <>
-      <Container className="d-flex justify-content-center h-100">
-        <Row>
-          <Col className="d-flex align-items-center">
-            <Container fluid>
-              <h1>UserAccessLayout</h1>
+      <Container
+        id="user-access-layout-container"
+        className="d-flex justify-content-center w-100 h-100"
+      >
+        <Row id="user-access-layout-row" className="w-100">
+          <Col
+            id="user-access-layout-col"
+            className="d-flex align-items-center"
+          >
+            <Container
+              fluid
+              id="user-access-layout-outlet"
+              className="text-center"
+            >
               <Outlet />
             </Container>
           </Col>

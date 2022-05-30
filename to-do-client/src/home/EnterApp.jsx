@@ -8,18 +8,15 @@ function EnterApp({
   activeUser,
   setActiveUser,
   hasAccessToken,
-  newUserFlag,
   setNewUserFlag,
-  setHasAccessToken,
   appErr,
   setAppErr,
 }) {
   useEffect(() => {
-    if (Object.keys(activeUser).length) {
+    if (Object.keys(activeUser).length && !hasAccessToken) {
       const invalidSession = new Error(
         "Invalid session. Please login again to validate."
       );
-      console.log("invalidSession: ", invalidSession);
       setAppErr(invalidSession);
     }
   }, []);
@@ -50,6 +47,7 @@ function EnterApp({
             <Container fluid id="user-view-element-container">
               <UserAccessPrompt
                 activeUser={activeUser}
+                setActiveUser={setActiveUser}
                 setNewUserFlag={setNewUserFlag}
                 appErr={appErr}
                 setAppErr={setAppErr}

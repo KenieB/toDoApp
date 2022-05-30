@@ -3,17 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import ErrorAlert from "../layout/ErrorAlert";
 
-function UserAccessPrompt({ activeUser, setNewUserFlag, appErr, setAppErr }) {
+function UserAccessPrompt({ activeUser, setActiveUser, setNewUserFlag, appErr, setAppErr }) {
   const navigate = useNavigate();
 
   //User Access Button Click Handlers
   const loginClickHandler = (event) => {
     event.preventDefault();
+    if(Object.keys(activeUser).length) {
+      setActiveUser({});
+    }
     setAppErr(null);
     navigate("/access/login");
   };
   const registerClickHandler = (event) => {
     event.preventDefault();
+    if(Object.keys(activeUser).length) {
+      setActiveUser({});
+    }
     setNewUserFlag(true);
     setAppErr(null);
     navigate("/access/register");
