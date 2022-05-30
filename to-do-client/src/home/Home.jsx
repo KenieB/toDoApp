@@ -8,7 +8,7 @@ function Home() {
 
   const clickHandler = (event) => {
     event.preventDefault();
-    navigate("/user");
+    navigate("/enter");
   };
 
   const entryBtnStyle = {

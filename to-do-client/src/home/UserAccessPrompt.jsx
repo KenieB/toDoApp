@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import ErrorAlert from "../layout/ErrorAlert";
 
-function UserAccess({ activeUser, setNewUserFlag, appErr, setAppErr }) {
+function UserAccessPrompt({ activeUser, setNewUserFlag, appErr, setAppErr }) {
   const navigate = useNavigate();
 
   //User Access Button Click Handlers
@@ -77,4 +77,4 @@ function UserAccess({ activeUser, setNewUserFlag, appErr, setAppErr }) {
   );
 }
 
-export default UserAccess;
+export default UserAccessPrompt;

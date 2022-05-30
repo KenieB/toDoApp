@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import TodoListLayout from "../todoList/TodoListLayout";
-import UserAccess from "../userAccess/UserAccess";
+import UserAccessPrompt from "./UserAccessPrompt";
 import "../App.css";
 
-function UserView({
+function EnterApp({
   activeUser,
   setActiveUser,
   hasAccessToken,
@@ -33,14 +33,7 @@ function UserView({
         <Row id="user-view-row">
           <Col className="d-flex align-items-center" id="user-view-col">
             <Container fluid id="user-view-element-container">
-              <TodoListLayout
-                activeUser={activeUser}
-                setActiveUser={setActiveUser}
-                hasAccessToken={hasAccessToken}
-                setHasAccessToken={setHasAccessToken}
-                appErr={appErr}
-                setAppErr={setAppErr}
-              />
+              <h1>Todo List</h1>
             </Container>
           </Col>
         </Row>
@@ -55,7 +48,7 @@ function UserView({
         <Row id="user-view-row">
           <Col className="d-flex align-items-center" id="user-view-col">
             <Container fluid id="user-view-element-container">
-              <UserAccess
+              <UserAccessPrompt
                 activeUser={activeUser}
                 setNewUserFlag={setNewUserFlag}
                 appErr={appErr}
@@ -69,4 +62,4 @@ function UserView({
   }
 }
 
-export default UserView;
+export default EnterApp;

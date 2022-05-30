@@ -4,7 +4,7 @@ import { Container } from "react-bootstrap";
 import Layout from "./layout/Layout";
 import Home from "./home/Home";
 import NotFound from "./NotFound";
-import UserView from "./userView/UserView";
+import EnterApp from "./home/EnterApp";
 
 function App() {
   const [newUserFlag, setNewUserFlag] = useState(false);
@@ -24,9 +24,9 @@ function App() {
           <Route index element={<Home />} />
           <Route path="home" element={<Navigate to="/" replace />} />
           <Route
-            path="user"
+            path="enter"
             element={
-              <UserView
+              <EnterApp
                 activeUser={activeUser}
                 setActiveUser={setActiveUser}
                 hasAccessToken={hasAccessToken}
