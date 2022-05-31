@@ -4,6 +4,7 @@ require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
 
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const errorHandler = require("./errors/errorHandler");
 const notFound = require("./errors/notFound");
@@ -15,11 +16,22 @@ const todoRouter = require("./todo/todo.router");
 const app = express();
 
 app.use(logger);
-app.use(cors());
-
-app.get("/", (req, res) =>
-  res.status(200).json({ message: "To-Do App Server" })
+app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
 );
+app.options("/*", function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, Content-Length, X-Requested-With"
+  );
+  next();
+});
 
 app.use(express.json());
 

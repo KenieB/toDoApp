@@ -156,7 +156,7 @@ async function create(req, res) {
     res
       .cookie("access_token", token, { httpOnly: true })
       .status(201)
-      .json({ data: { user_id: newUser.user_id } });
+      .json({ data: { user_id: newUser.user_id, access_token: token ? true : false } });
     req.log.trace({
       __filename,
       methodName,
@@ -176,8 +176,11 @@ function read(req, res) {
   const exstUser = res.locals.exstUser;
   const token = jwt.sign({ email: exstUser.email }, process.env.SECRET_KEY);
   res
+    .append("Access-Control-Allow_Origin", "http://localhost:3000/")
     .cookie("access_token", token, { httpOnly: true })
-    .json({ data: { user_id: exstUser.user_id } });
+    .json({
+      data: { user_id: exstUser.user_id, access_token: token ? true : false },
+    });
   req.log.trace({
     __filename,
     methodName,
@@ -204,6 +207,6 @@ module.exports = {
     bodyHasPasswordProperty,
     asyncErrorBoundary(userDoesNotExist),
     asyncErrorBoundary(validatePassword),
-    read,
+    asyncErrorBoundary(read),
   ],
 };

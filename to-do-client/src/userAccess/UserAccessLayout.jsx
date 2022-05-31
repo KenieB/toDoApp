@@ -27,11 +27,7 @@ function UserAccessLayout({
             id="user-access-layout-col"
             className="d-flex align-items-center"
           >
-            <Container
-              fluid
-              id="user-access-layout-outlet"
-              className="text-center"
-            >
+            <Container fluid id="user-access-layout-outlet">
               <Outlet />
             </Container>
           </Col>

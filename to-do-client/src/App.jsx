@@ -65,6 +65,7 @@ function App() {
                   appErr={appErr}
                   setAppErr={setAppErr}
                   newUserFlag={newUserFlag}
+                  setNewUserFlag={setNewUserFlag}
                 />
               }
             />
@@ -79,6 +80,7 @@ function App() {
                   appErr={appErr}
                   setAppErr={setAppErr}
                   newUserFlag={newUserFlag}
+                  setNewUserFlag={setNewUserFlag}
                 />
               }
             />

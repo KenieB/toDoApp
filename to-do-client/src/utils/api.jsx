@@ -1,5 +1,4 @@
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+const API_BASE_URL = "http://localhost:5000";
 
 /**
  * Defines the default headers for these functions to work with `json-server`
@@ -24,7 +23,17 @@ headers.append("Content-Type", "application/json");
  */
 async function fetchJson(url, options, onCancel) {
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(url, options)
+      .then((response) => {
+        // Inspect the headers in the response
+        response.headers.forEach(console.log);
+        // OR you can do this
+        for (let entry of response.headers.entries()) {
+          console.log(entry);
+        }
+        return response;
+      })
+      .catch((err) => console.error(err));
     if (response.status === 204) {
       return null;
     }
@@ -55,6 +64,7 @@ async function fetchJson(url, options, onCancel) {
 export async function registerNewUser(newUser, signal) {
   const url = new URL(`${API_BASE_URL}/users/register`);
   const options = {
+    mode: "cors",
     credentials: "include",
     method: "POST",
     headers,
@@ -65,7 +75,7 @@ export async function registerNewUser(newUser, signal) {
 }
 
 /**
- * Validate credentials for specified user 
+ * Validate credentials for specified user
  * @param {object<userCredentials>}
  *  the object containing user credentials
  * @param {AbortController.signal<signal>}
@@ -77,6 +87,7 @@ export async function registerNewUser(newUser, signal) {
 export async function loginUser(userCredentials, signal) {
   const url = new URL(`${API_BASE_URL}/users/login`);
   const options = {
+    mode: "cors",
     credentials: "include",
     method: "POST",
     headers,

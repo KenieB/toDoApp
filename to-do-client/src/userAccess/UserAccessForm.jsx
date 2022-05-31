@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { Form, Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Form, Container, Row, Col, Button } from "react-bootstrap";
+import { registerNewUser, loginUser } from "../utils/api";
+import ErrorAlert from "../layout/ErrorAlert";
 
 function UserAccessForm({
   setActiveUser,
@@ -8,6 +11,7 @@ function UserAccessForm({
   setAppErr,
   newUserFlag,
 }) {
+  const navigate = useNavigate();
   const newUserInit = {
     first_name: "",
     last_name: "",
@@ -19,7 +23,7 @@ function UserAccessForm({
     email: "",
     password: "",
   };
-  const initFormState = () => (newUser ? newUserInit : existingUserInit);
+  const initFormState = () => (newUserFlag ? newUserInit : existingUserInit);
 
   const [formData, setFormData] = useState(initFormState());
 
@@ -27,81 +31,188 @@ function UserAccessForm({
   const handleChange = ({ target }) => {
     setFormData({
       ...formData,
-      [target.name]: target.value,
+      [target.id]: target.value,
     });
   };
+
   const handleCancel = () => {
-    history.goBack();
+    setAppErr(null);
+    navigate("/");
   };
 
-  /*
- const handleSubmit = (event) => {
+  const handleSubmitLogin = (event) => {
     event.preventDefault();
     const abortController = new AbortController();
-    setNewReservationDate("");
-    async function createNewReservation() {
+    setActiveUser({});
+
+    async function validateUserLogin() {
       try {
-        const newReservationRequest = {
+        console.log("submit formData: ", formData);
+        const userLogin = {
           ...formData,
-          people: Number(formData.people),
         };
-        const response = await createReservation(
-          newReservationRequest,
-          abortController.signal
-        );
-        setNewReservationDate(response.reservation_date);
+        console.log(userLogin);
+        const response = await loginUser(userLogin, abortController.signal);
+        console.log(response);
+        setActiveUser(response.user_id);
+        setHasAccessToken(response.access_token);
       } catch (error) {
-        setReservationsError(error);
+        setAppErr(error);
       }
     }
-    createNewReservation();
+    validateUserLogin();
     return () => abortController.abort();
   };
-  */
 
-  /* if (newUserFlag) {
+  const handleSubmitRegister = (event) => {
+    event.preventDefault();
+    const abortController = new AbortController();
+    setActiveUser({});
+    async function validateUserRegistration() {
+      try {
+        console.log("submit formData: ", formData);
+        if (formData.password !== formData.password_confirm) {
+          setAppErr(
+            new Error(
+              "Password and Confirm Password fields must match. Please review and re-submit."
+            )
+          );
+        } else {
+          const newUser = {
+            first_name: formData.first_name,
+            last_name: formData.last_name,
+            email: formData.email,
+          };
+          console.log(newUser);
+          const response = await registerNewUser(
+            newUser,
+            abortController.signal
+          );
+          console.log(response);
+          setActiveUser(response.user_id);
+          setHasAccessToken(response.access_token);
+        }
+      } catch (error) {
+        setAppErr(error);
+      }
+    }
+    validateUserRegistration();
+    return () => abortController.abort();
+  };
+
+  if (newUserFlag) {
     return (
       <>
-        <Form>
-          <Form.Group className="" controlId="first_name">
-            <Form.Label>First Name</Form.Label>
-            <Form.Control type="text" placeholder="Enter first name" />
-          </Form.Group>
-          <Form.Group className="" controlId="last_name">
-            <Form.Label>Last Name</Form.Label>
-            <Form.Control type="text" placeholder="Enter last name" />
-          </Form.Group>
-          <Form.Group className="" controlId="password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Enter password" />
-          </Form.Group>
-          <Form.Group className="" controlId="password_confirm">
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Re-enter password to confirm"
-            />
-          </Form.Group>
-        </Form>
+        <Row>
+          <Col>
+            <Form onSubmit={handleSubmitRegister}>
+              <Form.Group className="my-3" controlId="first_name">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Enter first name"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="my-3" controlId="last_name">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Enter last name"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="my-3" controlId="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  placeholder="Enter password"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="my-3" controlId="password_confirm">
+                <Form.Label>Confirm Password</Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  placeholder="Re-enter password to confirm"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Row className="mt-3">
+                <Col>
+                  <Button variant="dark" onClick={handleCancel}>
+                    Cancel
+                  </Button>
+                </Col>
+                <Col>
+                  <Button variant="info" type="submit">
+                    Submit
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <ErrorAlert err={appErr} />
+          </Col>
+        </Row>
       </>
     );
   } else {
     return (
       <>
-        <Form>
-          <Form.Group className="" controlId="email">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" placeholder="Enter email address" />
-          </Form.Group>
-          <Form.Group className="" controlId="password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Enter password" />
-          </Form.Group>
-        </Form>
+        <Row>
+          <Col>
+            <Form onSubmit={handleSubmitLogin}>
+              <Form.Group className="my-3">
+                <Form.Label htmlFor="email">Email</Form.Label>
+                <Form.Control
+                  required
+                  id="email"
+                  type="email"
+                  placeholder="Enter email address"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="my-3">
+                <Form.Label htmlFor="password">Password</Form.Label>
+                <Form.Control
+                  required
+                  id="password"
+                  type="password"
+                  placeholder="Enter password"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Row>
+                <Col>
+                  <Button variant="dark" onClick={handleCancel}>
+                    Cancel
+                  </Button>
+                </Col>
+                <Col>
+                  <Button variant="info" type="submit">
+                    Submit
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <ErrorAlert err={appErr} />
+          </Col>
+        </Row>
       </>
     );
-  }*/
-  return <h1>UserAccessForm</h1>;
+  }
 }
 
 export default UserAccessForm;

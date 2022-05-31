@@ -20,7 +20,6 @@ function UserAccessPrompt({ activeUser, setActiveUser, setNewUserFlag, appErr, s
     if(Object.keys(activeUser).length) {
       setActiveUser({});
     }
-    setNewUserFlag(true);
     setAppErr(null);
     navigate("/access/register");
   };
