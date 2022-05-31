@@ -54,7 +54,7 @@ function UserAccessForm({
         console.log(userLogin);
         const response = await loginUser(userLogin, abortController.signal);
         console.log(response);
-        setActiveUser(response.user_id);
+        setActiveUser({ id: response.user_id, name: response.user_name });
         setHasAccessToken(response.access_token);
       } catch (error) {
         setAppErr(error);
@@ -89,7 +89,7 @@ function UserAccessForm({
             abortController.signal
           );
           console.log(response);
-          setActiveUser(response.user_id);
+          setActiveUser({ id: response.user_id, name: response.user_name });
           setHasAccessToken(response.access_token);
         }
       } catch (error) {

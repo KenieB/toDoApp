@@ -10,7 +10,7 @@ exports.up = function (knex) {
     table.string("title").notNullable();
     table.text("description").notNullable();
     table.date("due-date").notNullable();
-    table.specificType("tags", "text[]");
+    table.specificType("tags", "text[]").defaultTo("{}").notNullable();
     table.timestamps(true, true);
   });
 };

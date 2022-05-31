@@ -16,7 +16,9 @@ const todoRouter = require("./todo/todo.router");
 const app = express();
 
 app.use(logger);
+
 app.use(cookieParser());
+
 app.use(
   cors({
     credentials: true,

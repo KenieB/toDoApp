@@ -3,6 +3,8 @@ const usersService = require("./users.service");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const jwtKey = process.env.SECRET_KEY;
+
 //Request Validations
 function bodyHasData(req, res, next) {
   const methodName = "bodyHasData";
@@ -152,11 +154,17 @@ async function create(req, res) {
   const newUser = await usersService.create(reqNewUser);
 
   if (newUser) {
-    const token = jwt.sign({ email: newUser.email }, process.env.SECRET_KEY);
+    const token = jwt.sign({ id: newUser.user_id }, jwtKey);
     res
       .cookie("access_token", token, { httpOnly: true })
       .status(201)
-      .json({ data: { user_id: newUser.user_id, access_token: token ? true : false } });
+      .json({
+        data: {
+          user_id: newUser.user_id,
+          user_name: newUser.first_name,
+          access_token: token ? true : false,
+        },
+      });
     req.log.trace({
       __filename,
       methodName,
@@ -174,12 +182,16 @@ function read(req, res) {
   const methodName = "read";
   req.log.debug({ __filename, methodName });
   const exstUser = res.locals.exstUser;
-  const token = jwt.sign({ email: exstUser.email }, process.env.SECRET_KEY);
+  const token = jwt.sign({ id: exstUser.user_id }, process.env.SECRET_KEY);
   res
     .append("Access-Control-Allow_Origin", "http://localhost:3000/")
     .cookie("access_token", token, { httpOnly: true })
     .json({
-      data: { user_id: exstUser.user_id, access_token: token ? true : false },
+      data: {
+        user_id: exstUser.user_id,
+        user_name: exstUser.first_name,
+        access_token: token ? true : false,
+      },
     });
   req.log.trace({
     __filename,
