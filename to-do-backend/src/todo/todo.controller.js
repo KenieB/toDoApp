@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const jwtKey = process.env.SECRET_KEY;
 
 //Request Validations
-function verifyToken(req, res, next) {
+async function verifyToken(req, res, next) {
   const methodName = "verifyToken";
   req.log.debug({ __filename, methodName, cookies: req.cookies });
   const vToken = req.cookies["access_token"];
@@ -26,22 +26,25 @@ function verifyToken(req, res, next) {
   });
 }
 
-/*
-function reqHasAccessTokenCookie(req, res, next) {
-  const methodName = "reqHasAccessTokenCookie";
-  req.log.debug({ __filename, methodName, cookies: req.cookies });
-  const { access_token = {} } = req.cookies;
-  if (access_token) {
+function reqParamIdMatchesTokenId(req, res, next) {
+  const methodName = "reqParamIdMatchesTokenId";
+  const reqId = Number(req.params.userId);
+  const authId = res.locals.jwtId;
+  req.log.debug({
+    __filename,
+    methodName,
+    currIdsAsNums: { requested: reqId, authenticated: authId },
+  });
+  if (reqId === authId) {
     req.log.trace({ __filename, methodName, valid: true });
-    res.locals.accessToken = access_token;
+    res.locals.userId = reqId;
     return next();
   }
   const message =
-    "Request must have cookie for session access. Login or register to validate session access.";
+    "Requested user account does not match authenticated user account";
+  req.log.trace({ __filename, methodName, valid: false }, message);
   next({ status: 401, message: message });
-  req.log.trace({ __filename, methodName, valid: false }, message, req.cookies);
 }
-*/
 
 function bodyHasData(req, res, next) {
   const methodName = "bodyHasData";
@@ -57,43 +60,10 @@ function bodyHasData(req, res, next) {
   next({ status: 400, message: message });
 }
 
-function bodyHasUserIdProperty(req, res, next) {
-  const methodName = "bodyHasUserIdProperty";
+function dataHasTitleProperty(req, res, next) {
+  const methodName = "dataHasTitleProperty";
   req.log.debug({ __filename, methodName });
-  const { data: { user_id } = {} } = req.body;
-  if (user_id) {
-    req.log.trace({ __filename, methodName, valid: true });
-    res.locals.userId = Number(user_id);
-    return next();
-  }
-  const message = "User request must include account ID";
-  req.log.trace({ __filename, methodName, valid: false }, message);
-  next({ status: 400, message: message });
-}
-
-function requestedIdMatchesAuthTokenId(req, res, next) {
-  const methodName = "requestedIdMatchesAuthTokenId";
-  const reqId = res.locals.userId;
-  const authId = res.locals.jwtId;
-  req.log.debug({
-    __filename,
-    methodName,
-    currIdsAsNums: { requested: reqId, authenticated: authId },
-  });
-  if (reqId === authId) {
-    req.log.trace({ __filename, methodName, valid: true });
-    return next();
-  }
-  const message =
-    "Requested user account does not match authenticated user account";
-  req.log.trace({ __filename, methodName, valid: false }, message);
-  next({ status: 401, message: message });
-}
-
-function bodyHasTitleProperty(req, res, next) {
-  const methodName = "bodyHasTitleProperty";
-  req.log.debug({ __filename, methodName });
-  const { data: { title } = {} } = req.body;
+  const { title = {} } = res.locals.data;
   if (title) {
     req.log.trace({ __filename, methodName, valid: true });
     res.locals.newTitle = title;
@@ -104,10 +74,10 @@ function bodyHasTitleProperty(req, res, next) {
   next({ status: 400, message: message });
 }
 
-function bodyHasDescriptionProperty(req, res, next) {
-  const methodName = "bodyHasDescriptionProperty";
+function dataHasDescriptionProperty(req, res, next) {
+  const methodName = "dataHasDescriptionProperty";
   req.log.debug({ __filename, methodName });
-  const { data: { description } = {} } = req.body;
+  const { description = {} } = res.locals.data;
   if (description) {
     req.log.trace({ __filename, methodName, valid: true });
     res.locals.newDescription = description;
@@ -118,10 +88,10 @@ function bodyHasDescriptionProperty(req, res, next) {
   next({ status: 400, message: message });
 }
 
-function bodyHasDueDateProperty(req, res, next) {
-  const methodName = "bodyHasDueDateProperty";
+function dataHasDueDateProperty(req, res, next) {
+  const methodName = "dataHasDueDateProperty";
   req.log.debug({ __filename, methodName });
-  const { data: { due_date } = {} } = req.body;
+  const { due_date = {} } = res.locals.data;
   if (due_date) {
     req.log.trace({ __filename, methodName, valid: true });
     res.locals.newDueDate = due_date;
@@ -132,8 +102,8 @@ function bodyHasDueDateProperty(req, res, next) {
   next({ status: 400, message: message });
 }
 
-function bodyHasItemIdProperty(req, res, next) {
-  const methodName = "bodyHasItemIdProperty";
+function dataHasItemIdProperty(req, res, next) {
+  const methodName = "dataHasItemIdProperty";
   req.log.debug({ __filename, methodName });
   const { data: { item_id } = {} } = req.body;
   if (item_id) {
@@ -146,8 +116,8 @@ function bodyHasItemIdProperty(req, res, next) {
   next({ status: 400, message: message });
 }
 
-function bodyHasNewTagProperty(req, res, next) {
-  const methodName = "bodyHasNewTagProperty";
+function dataHasNewTagProperty(req, res, next) {
+  const methodName = "dataHasNewTagProperty";
   req.log.debug({ __filename, methodName });
   const { data: { new_tag } = {} } = req.body;
   if (new_tag) {
@@ -203,7 +173,9 @@ async function list(req, res) {
   const userId = res.locals.userId;
   const data = await todoItemsService.list(userId);
   req.log.trace({ __filename, methodName, return: true });
-  res.json({ data });
+  res
+    .append("Access-Control-Allow_Origin", "http://localhost:3000/")
+    .json({ data });
 }
 
 async function create(req, res) {
@@ -217,7 +189,7 @@ async function create(req, res) {
   req.log.debug({ __filename, methodName, newItem: newItem });
   const data = await todoItemsService.create(newItem);
   req.log.trace({ __filename, methodName, return: true });
-  res.json({ data });
+  res.append("Access-Control-Allow_Origin", "http://localhost:3000/").json({ data });
 }
 
 async function updateTags(req, res) {
@@ -229,57 +201,52 @@ async function updateTags(req, res) {
   req.log.debug({ __filename, methodName, update: update });
   const data = await todoItemsService.updateTags(update);
   req.log.trace({ __filename, methodName, return: true });
-  res.json({ data });
+  res.append("Access-Control-Allow_Origin", "http://localhost:3000/").json({ data });
 }
 
 async function destroy(req, res) {
   const methodName = "destroy";
-  req.log.debug({ __filename, methodName, table: res.locals.table });
+  rkeq.log.debug({ __filename, methodName, table: res.locals.table });
 
   const itemId = res.locals.itemId;
   await todoItemsService.delete(itemId);
 
   const data = await todoItemsService.list(res.locals.userId);
 
-  res.json({ data });
+  res.append("Access-Control-Allow_Origin", "http://localhost:3000/").json({ data });
   req.log.trace({ __filename, methodName, return: true, data });
 }
 
 module.exports = {
   list: [
     asyncErrorBoundary(verifyToken),
-    bodyHasData,
-    bodyHasUserIdProperty,
-    requestedIdMatchesAuthTokenId,
+    reqParamIdMatchesTokenId,
     asyncErrorBoundary(list),
   ],
   create: [
     asyncErrorBoundary(verifyToken),
+    reqParamIdMatchesTokenId,
     bodyHasData,
-    bodyHasUserIdProperty,
-    requestedIdMatchesAuthTokenId,
-    bodyHasTitleProperty,
-    bodyHasDescriptionProperty,
-    bodyHasDueDateProperty,
+    dataHasTitleProperty,
+    dataHasDescriptionProperty,
+    dataHasDueDateProperty,
     asyncErrorBoundary(create),
   ],
   updateTags: [
     asyncErrorBoundary(verifyToken),
+    reqParamIdMatchesTokenId,
     bodyHasData,
-    bodyHasUserIdProperty,
-    requestedIdMatchesAuthTokenId,
-    bodyHasItemIdProperty,
-    bodyHasNewTagProperty,
+    dataHasItemIdProperty,
+    dataHasNewTagProperty,
     asyncErrorBoundary(itemExists),
     newTagIsNotExistingItemTag,
     asyncErrorBoundary(updateTags),
   ],
   delete: [
     asyncErrorBoundary(verifyToken),
+    reqParamIdMatchesTokenId,
     bodyHasData,
-    bodyHasUserIdProperty,
-    requestedIdMatchesAuthTokenId,
-    bodyHasItemIdProperty,
+    dataHasItemIdProperty,
     asyncErrorBoundary(itemExists),
     asyncErrorBoundary(destroy),
   ],

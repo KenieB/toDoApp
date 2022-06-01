@@ -44,20 +44,20 @@ function UserAccessForm({
     event.preventDefault();
     const abortController = new AbortController();
     setActiveUser({});
-
+    setAppErr(null);
     async function validateUserLogin() {
       try {
-        console.log("submit formData: ", formData);
         const userLogin = {
           ...formData,
         };
-        console.log(userLogin);
         const response = await loginUser(userLogin, abortController.signal);
         console.log(response);
         setActiveUser({ id: response.user_id, name: response.user_name });
         setHasAccessToken(response.access_token);
       } catch (error) {
         setAppErr(error);
+      } finally {
+        navigate("/todo");
       }
     }
     validateUserLogin();
@@ -68,6 +68,7 @@ function UserAccessForm({
     event.preventDefault();
     const abortController = new AbortController();
     setActiveUser({});
+    setAppErr(null);
     async function validateUserRegistration() {
       try {
         console.log("submit formData: ", formData);
@@ -94,6 +95,8 @@ function UserAccessForm({
         }
       } catch (error) {
         setAppErr(error);
+      } finally {
+        navigate("/todo");
       }
     }
     validateUserRegistration();

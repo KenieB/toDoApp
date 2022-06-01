@@ -108,8 +108,9 @@ export async function loginUser(userCredentials, signal) {
  */
 
 export async function loadList(userId, signal) {
-  const url = new URL(`${API_BASE_URL}/to-do`);
+  const url = new URL(`${API_BASE_URL}/to-do/${userId}`);
   const options = {
+    mode: "cors",
     credentials: "include",
     headers,
     signal,
