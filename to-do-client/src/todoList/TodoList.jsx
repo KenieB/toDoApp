@@ -1,5 +1,5 @@
-import React from "react";
-import { useOutletContext } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Row,
@@ -10,18 +10,24 @@ import {
   Button,
   Image,
 } from "react-bootstrap";
-import { loadList } from "../utils/api";
+import ErrorAlert from "../utils/ErrorAlert";
+import sortItemsByTitle from "./sortItemsByTitle";
+//import { loadList, addNewTag, deleteListItem } from "../utils/api";
 
 function TodoList({
   activeUser,
   setActiveUser,
   hasAccessToken,
   setHasAccessToken,
+  listSort,
+  setListSort,
   userTodoList,
   setUserTodoList,
   appErr,
   setAppErr,
 }) {
+  const navigate = useNavigate();
+  /*
   const todoList = userTodoList.map((user_td_item) => (
     <Container fluid>
       <Row className="border-bottom border-black-50">
@@ -62,7 +68,21 @@ function TodoList({
       </Row>
     </Container>
   ));
-  return <>{todoList}</>;
+  */
+
+  /* 
+    useEffect(() => {
+
+    }, [listSort]);
+  */
+
+  return (
+    <>
+      <Container fluid>
+        <h1>TodoList</h1>
+      </Container>
+    </>
+  );
 }
 
 export default TodoList;

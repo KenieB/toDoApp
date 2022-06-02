@@ -1,25 +1,24 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import ErrorAlert from "../layout/ErrorAlert";
+import ErrorAlert from "../utils/ErrorAlert";
 
-function UserAccessPrompt({ activeUser, setActiveUser, setNewUserFlag, appErr, setAppErr }) {
+function UserAccessPrompt({
+  setActiveUser,
+  setNewUserFlag,
+  appErr,
+  setAppErr,
+}) {
   const navigate = useNavigate();
 
   //User Access Button Click Handlers
   const loginClickHandler = (event) => {
     event.preventDefault();
-    if(Object.keys(activeUser).length) {
-      setActiveUser({});
-    }
     setAppErr(null);
     navigate("/access/login");
   };
   const registerClickHandler = (event) => {
     event.preventDefault();
-    if(Object.keys(activeUser).length) {
-      setActiveUser({});
-    }
     setAppErr(null);
     navigate("/access/register");
   };
@@ -45,8 +44,8 @@ function UserAccessPrompt({ activeUser, setActiveUser, setNewUserFlag, appErr, s
           <Row className="gap-3 gap-md-0" id="user-access-btn-row">
             <Col className="px-0" id="user-access-btn-col-rgstr">
               <Container
-                className="d-flex justify-content-center"
                 id="user-access-btn-container-rgstr"
+                className="d-flex justify-content-center"
               >
                 <Button
                   variant="secondary"
@@ -61,8 +60,8 @@ function UserAccessPrompt({ activeUser, setActiveUser, setNewUserFlag, appErr, s
             </Col>
             <Col className="px-0" id="user-access-btn-col-login">
               <Container
-                className="d-flex justify-content-center"
                 id="user-access-btn-container-login"
+                className="d-flex justify-content-center"
               >
                 <Button
                   variant="info"

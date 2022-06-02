@@ -10,17 +10,14 @@ import LoginUser from "./userAccess/LoginUser";
 import RegisterUser from "./userAccess/RegisterUser";
 import TodoListLayout from "./todoList/TodoListLayout";
 import TodoList from "./todoList/TodoList";
+import AddToList from "./todoList/AddToList";
 
 function App() {
   const [newUserFlag, setNewUserFlag] = useState(false);
   const [activeUser, setActiveUser] = useState({});
   const [hasAccessToken, setHasAccessToken] = useState(false);
   const [userTodoList, setUserTodoList] = useState([]);
-  const [listSort, setListSort] = useState({
-    field: "due-date",
-    direction: "asc",
-  });
-  // listSort acceptableValues { field: ["title", "due-date"], direction: ["asc", "desc"] }
+  const [listSort, setListSort] = useState("due-date-asc");
   const [appErr, setAppErr] = useState(null);
 
   return (
@@ -40,6 +37,7 @@ function App() {
                 activeUser={activeUser}
                 setActiveUser={setActiveUser}
                 hasAccessToken={hasAccessToken}
+                setHasAccessToken={setHasAccessToken}
                 setNewUserFlag={setNewUserFlag}
                 appErr={appErr}
                 setAppErr={setAppErr}
@@ -100,10 +98,10 @@ function App() {
                 setActiveUser={setActiveUser}
                 hasAccessToken={hasAccessToken}
                 setHasAccessToken={setHasAccessToken}
-                userTodoList={userTodoList}
-                setUserTodoList={setUserTodoList}
                 listSort={listSort}
                 setListSort={setListSort}
+                userTodoList={userTodoList}
+                setUserTodoList={setUserTodoList}
                 appErr={appErr}
                 setAppErr={setAppErr}
               />
@@ -117,10 +115,26 @@ function App() {
                   setActiveUser={setActiveUser}
                   hasAccessToken={hasAccessToken}
                   setHasAccessToken={setHasAccessToken}
-                  userTodoList={userTodoList}
-                  setUserTodoList={setUserTodoList}
                   listSort={listSort}
                   setListSort={setListSort}
+                  userTodoList={userTodoList}
+                  setUserTodoList={setUserTodoList}
+                  appErr={appErr}
+                  setAppErr={setAppErr}
+                />
+              }
+            />
+            <Route
+              path="add-to-list"
+              element={
+                <AddToList
+                  activeUser={activeUser}
+                  setActiveUser={setActiveUser}
+                  hasAccessToken={hasAccessToken}
+                  setHasAccessToken={setHasAccessToken}
+                  listSort={listSort}
+                  userTodoList={userTodoList}
+                  setUserTodoList={setUserTodoList}
                   appErr={appErr}
                   setAppErr={setAppErr}
                 />

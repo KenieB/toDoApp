@@ -3,60 +3,60 @@
     "first_name": "Herc",
     "last_name": "Gheeorghie",
     "email": "hgheeorghie0@weebly.com",
-    "password": "ac20d7945bfdfb99aa2196161380dff8f3e26ac5"
+    "password": "$2b$10$Mfj7iwv.jrnSZ7wZqIjniOOsyJEZfzv9LwJEX.7rWJYKhYrRoFo.u"
   },
   {
     "first_name": "Ron",
     "last_name": "Micklem",
     "email": "rmicklem1@pbs.org",
-    "password": "3c09bbd0bfacbea905a7ce9f7fb57967045679a1"
+    "password": "$2b$10$DxcfWM0rP0rKTBcU2.rPjenmEbKTfzIaBYzDGrRPZUKE2q55rMxLS"
   },
   {
     "first_name": "Sharl",
     "last_name": "Werrit",
     "email": "swerrit2@archive.org",
-    "password": "a04653cb363f0395f7ff6669ecbd58a85cd4270c"
+    "password": "$2b$10$7U3UNLKHPP2dw6aucJtjMelOW9b.zXQIPdqGbqCevCYuS.xczpuEa"
   },
   {
     "first_name": "Darcey",
     "last_name": "Deavall",
     "email": "ddeavall3@spotify.com",
-    "password": "dca49b3cca24d641cd1f95901575488caa107412"
+    "password": "$2b$10$9/2cqr3mj2nXFg4jz1b7ROMeXpSMhF4MFfe5j6jvnFX7jP7mO4dwu"
   },
   {
     "first_name": "Ty",
     "last_name": "Arundel",
     "email": "tarundel4@tumblr.com",
-    "password": "26c43b75a7e14e0b5153f19587ca326bf458463d"
+    "password": "$2b$10$4PfKgQplcztjqywwIzFSBuN3w6qnl7mqZkkqg3wYLitEQNuAtbAfu"
   },
   {
     "first_name": "Pyotr",
     "last_name": "Leffek",
     "email": "pleffek5@utexas.edu",
-    "password": "6b25caa1500876e0623f7f256d9b592d17e5731e"
+    "password": "$2b$10$J/MoSxISLNVNuaf0e9f8HOS7cDdypZvVedshAlL7wSAKs7ukQ6Cy6"
   },
   {
     "first_name": "Nicolis",
     "last_name": "Gapp",
     "email": "ngapp6@goo.ne.jp",
-    "password": "b2292ac65f287f899818fc5d6c4d2505c655399c"
+    "password": "$2b$10$LFbE9dgDuHYXSByr4xWJJ.hd24/LmR/M4fijY7G0N5qUt8GO9NEtS"
   },
   {
     "first_name": "Gideon",
     "last_name": "Braunthal",
     "email": "gbraunthal7@free.fr",
-    "password": "3d8f73a45d52d4717aa6ddfc293e23c477a998ae"
+    "password": "$2b$10$BU5b2nVxHwIhgsEgKUN9jOF79sQU6iWl83z0E6U7reJP4PTeVN3P2"
   },
   {
     "first_name": "Hi",
     "last_name": "MacAllaster",
     "email": "hmacallaster8@businessinsider.com",
-    "password": "eed08745d6a67e6acda8f0556ae30bcc3e9057ed"
+    "password": "$2b$10$/q8uMB7cRofCRfMPl7x8juJwvugziDBLc2ZFACUdvbYQN.cnEhdUK"
   },
   {
     "first_name": "Elroy",
     "last_name": "Purvey",
     "email": "epurvey9@chicagotribune.com",
-    "password": "59fc21133eb14ea664fb4249b146ee72d8d02d06"
+    "password": "$2b$10$nc2Ksfogc34ltez0OxWa8OWcBSHzQcr3ecUuXgpLI/yCwtb5ftbke"
   }
 ]

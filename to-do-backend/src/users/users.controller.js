@@ -108,11 +108,11 @@ async function reqUserDoesNotExist(req, res, next) {
 }
 
 //Security middleware
-async function protectPassword(req, res, next) {
+function protectPassword(req, res, next) {
   const methodName = "protectPassword";
   const plaintextPassword = res.locals.plaintextPassword;
-  req.log.debug({ __filename, methodName });
-  const hashPass = await bcrypt.hash(plaintextPassword, 10);
+  req.log.debug({ __filename, methodName, plaintextPassword: plaintextPassword });
+  const hashPass = bcrypt.hashSync(plaintextPassword, 10);
   if (hashPass) {
     req.log.trace({ __filename, methodName, valid: true });
     res.locals.hashPass = hashPass;
@@ -123,12 +123,12 @@ async function protectPassword(req, res, next) {
   req.log.trace({ __filename, methodName, valid: false }, message);
 }
 
-async function validatePassword(req, res, next) {
+function validatePassword(req, res, next) {
   const methodName = "validatePassword";
   const plaintextPassword = res.locals.plaintextPassword;
   const exstUserPassword = res.locals.exstUser.password;
   req.log.debug({ __filename, methodName });
-  const passwordIsValid = await bcrypt.compare(
+  const passwordIsValid = bcrypt.compareSync(
     plaintextPassword,
     exstUserPassword
   );
@@ -148,9 +148,10 @@ function endUserSession(req, res) {
   if (accessToken) {
     res.clearCookie("access_token").sendStatus(204);
     req.log.trace({ __filename, methodName, valid: true });
+  } else {
+    res.sendStatus(204);
+    req.log.trace({ __filename, methodName, valid: true });
   }
-  res.sendStatus(204);
-  req.log.trace({ __filename, methodName, valid: true });
 }
 
 //CRUD methods
@@ -231,9 +232,9 @@ module.exports = {
     bodyHasData,
     dataHasEmailProperty,
     dataHasPasswordProperty,
-    asyncErrorBoundary(reqUserDoesNotExist),
-    asyncErrorBoundary(validatePassword),
+    reqUserDoesNotExist,
+    validatePassword,
     asyncErrorBoundary(read),
   ],
-  endUserSession
+  endUserSession,
 };

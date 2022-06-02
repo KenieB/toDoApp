@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import UserAccessForm from "./UserAccessForm";
-import ErrorAlert from "../layout/ErrorAlert";
+import ErrorAlert from "../utils/ErrorAlert";
 
 function LoginUser({
   activeUser,
@@ -11,21 +11,10 @@ function LoginUser({
   appErr,
   setAppErr,
   newUserFlag,
+  setNewUserFlag,
 }) {
   useEffect(() => {
-    if (Object.keys(activeUser).length) {
-      setActiveUser({});
-    }
-    if (hasAccessToken) {
-      setHasAccessToken(false);
-    }
-    if (newUserFlag) {
-      setNewUserFlag(false);
-    }
-    console.log("[LOGIN] activeUser: ", activeUser);
-    console.log("[LOGIN] hasAccessToken: ", hasAccessToken);
-    console.log("[LOGIN] newUserFlag: ", newUserFlag);
-    console.log("[LOGIN] appErr: ", appErr);
+    setNewUserFlag(false);
   }, []);
   return (
     <>
@@ -40,11 +29,14 @@ function LoginUser({
       <Row>
         <Col>
           <UserAccessForm
+            activeUser={activeUser}
             setActiveUser={setActiveUser}
+            hasAccessToken={hasAccessToken}
             setHasAccessToken={setHasAccessToken}
             appErr={appErr}
             setAppErr={setAppErr}
             newUserFlag={newUserFlag}
+            setNewUserFlag={setNewUserFlag}
           />
         </Col>
       </Row>

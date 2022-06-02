@@ -98,7 +98,26 @@ export async function loginUser(userCredentials, signal) {
 }
 
 /**
- * Retrieves existing to-do list for user with specified `userId`
+ * Clear user session authorization cookies to close user session access
+ * @param {AbortController.signal<signal>}
+ *  optional AbortController.signal
+ * @returns {Promise<status>}
+ *  a promise that resolves to the status code confirming session termination (no response body).
+ */
+export async function logoutUser(signal) {
+  const url = new URL(`${API_BASE_URL}/users/logout`);
+  const options = {
+    mode: "cors",
+    credentials: "include",
+    method: "POST",
+    headers,
+    signal,
+  };
+  return await fetchJson(url, options, []);
+}
+
+/**
+ * Retrieves existing to-do list items for user with specified `userId`
  * @param {string<userId>}
  *  the `user_id` matching desired to-do list items(s)
  * @param {AbortController.signal<signal>}

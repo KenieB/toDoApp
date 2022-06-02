@@ -1,17 +1,21 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Form, Container, Row, Col, Button } from "react-bootstrap";
 import { registerNewUser, loginUser } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
+import ErrorAlert from "../utils/ErrorAlert";
 
 function UserAccessForm({
+  activeUser,
   setActiveUser,
+  hasAccessToken,
   setHasAccessToken,
   appErr,
   setAppErr,
   newUserFlag,
+  setNewUserFlag,
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const newUserInit = {
     first_name: "",
     last_name: "",
@@ -29,6 +33,7 @@ function UserAccessForm({
 
   // Click/Change/Submit Handlers
   const handleChange = ({ target }) => {
+    setAppErr(null);
     setFormData({
       ...formData,
       [target.id]: target.value,
@@ -37,6 +42,7 @@ function UserAccessForm({
 
   const handleCancel = () => {
     setAppErr(null);
+    setNewUserFlag(false);
     navigate("/");
   };
 
@@ -51,13 +57,10 @@ function UserAccessForm({
           ...formData,
         };
         const response = await loginUser(userLogin, abortController.signal);
-        console.log(response);
         setActiveUser({ id: response.user_id, name: response.user_name });
         setHasAccessToken(response.access_token);
       } catch (error) {
         setAppErr(error);
-      } finally {
-        navigate("/todo");
       }
     }
     validateUserLogin();
@@ -71,7 +74,6 @@ function UserAccessForm({
     setAppErr(null);
     async function validateUserRegistration() {
       try {
-        console.log("submit formData: ", formData);
         if (formData.password !== formData.password_confirm) {
           setAppErr(
             new Error(
@@ -83,29 +85,46 @@ function UserAccessForm({
             first_name: formData.first_name,
             last_name: formData.last_name,
             email: formData.email,
+            password: formData.password,
           };
-          console.log(newUser);
           const response = await registerNewUser(
             newUser,
             abortController.signal
           );
-          console.log(response);
           setActiveUser({ id: response.user_id, name: response.user_name });
           setHasAccessToken(response.access_token);
         }
       } catch (error) {
         setAppErr(error);
-      } finally {
-        navigate("/todo");
       }
     }
     validateUserRegistration();
     return () => abortController.abort();
   };
 
+  useEffect(() => {
+    setAppErr(null);
+    setActiveUser({});
+    setHasAccessToken(false);
+    if (location.pathname === "/access/register") {
+      setNewUserFlag(true);
+    } else {
+      setNewUserFlag(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (hasAccessToken && Object.keys(activeUser).length) {
+      navigate("/todo/list");
+    }
+  }, [activeUser, hasAccessToken]);
+
   if (newUserFlag) {
     return (
       <>
+        <Row>
+          <ErrorAlert error={appErr} />
+        </Row>
         <Row>
           <Col>
             <Form onSubmit={handleSubmitRegister}>
@@ -124,6 +143,16 @@ function UserAccessForm({
                   required
                   type="text"
                   placeholder="Enter last name"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="my-3">
+                <Form.Label htmlFor="email">Email</Form.Label>
+                <Form.Control
+                  required
+                  id="email"
+                  type="email"
+                  placeholder="Enter email address"
                   onChange={handleChange}
                 />
               </Form.Group>
@@ -158,11 +187,6 @@ function UserAccessForm({
                 </Col>
               </Row>
             </Form>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <ErrorAlert err={appErr} />
           </Col>
         </Row>
       </>
@@ -206,11 +230,6 @@ function UserAccessForm({
                 </Col>
               </Row>
             </Form>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <ErrorAlert err={appErr} />
           </Col>
         </Row>
       </>
