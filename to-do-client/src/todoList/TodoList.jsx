@@ -11,7 +11,7 @@ import {
   Image,
 } from "react-bootstrap";
 import ErrorAlert from "../utils/ErrorAlert";
-import sortItemsByTitle from "./sortItemsByTitle";
+import { sortItemsByTitleAsc, sortItemsByTitleDesc } from "./sortListItems";
 //import { loadList, addNewTag, deleteListItem } from "../utils/api";
 
 function TodoList({
@@ -27,7 +27,7 @@ function TodoList({
   setAppErr,
 }) {
   const navigate = useNavigate();
-  /*
+
   const todoList = userTodoList.map((user_td_item) => (
     <Container fluid>
       <Row className="border-bottom border-black-50">
@@ -53,13 +53,7 @@ function TodoList({
                   </Button>
                 </Container>
                 <Container fluid>
-                  <Card.Img
-                    src="/src/images/calendar-event-icon.svg"
-                    alt="Calendar icon for item due-date"
-                  />
-                  <Card.ImgOverlay className="text-center">
-                    <Card.Subtitle>{`${user_td_item["due-date"]}`}</Card.Subtitle>
-                  </Card.ImgOverlay>
+                  <Card.Subtitle>{`${user_td_item["due-date"]}`}</Card.Subtitle>
                 </Container>
               </Col>
             </Row>
@@ -68,7 +62,6 @@ function TodoList({
       </Row>
     </Container>
   ));
-  */
 
   /* 
     useEffect(() => {
@@ -76,10 +69,57 @@ function TodoList({
     }, [listSort]);
   */
 
+  useEffect(() => {
+    setAppErr(null);
+    const abortController = new AbortController();
+    if (hasAccessToken && Object.keys(activeUser).length) {
+      console.log("api.listTodoForUser");
+      async function loadUserList() {
+        try {
+          const response = await loadList(
+            activeUser.id,
+            abortController.signal
+          );
+          console.log(response);
+          if (listSort === "due-date-asc") {
+            setUserTodoList(response);
+          } else if (listSort === "due-date-desc") {
+            //const listByDueDateDesc = sortItemsByDueDateAsc(response);
+            //setUserTodoList(listByDueDateDesc);
+          } else if (listSort === "title-asc") {
+            const listByTitleAsc = sortItemsByTitleAsc(response);
+            setUserTodoList(listByTitleAsc);
+          } else if (listSort === "title-desc") {
+            const listByTitleDesc = sortItemsByTitleDesc(response);
+            setUserTodoList(listByTitleDesc);
+          } else {
+            setAppErr(new Error("Invalid list sort-by value. Contact admin."));
+          }
+        } catch (error) {
+          setAppErr(error);
+        }
+      }
+      loadUserList();
+      console.log(activeUser);
+      console.log(userTodoList);
+      return () => abortController.abort();
+    } else {
+      hasAccessToken ? setHasAccessToken(false) : setActiveUser({});
+      const authSyncError = new Error(
+        "Session authentication error. Please login again."
+      );
+      setAppErr(authSyncError);
+      navigate("/enter");
+    }
+  }, [activeUser, hasAccessToken, userTodoList]);
+
   return (
     <>
-      <Container fluid>
-        <h1>TodoList</h1>
+      <Container fluid className="py-2">
+        <Row className="text-center">
+          <h1>TodoList</h1>
+        </Row>
+        <Row>{todoList}</Row>
       </Container>
     </>
   );
