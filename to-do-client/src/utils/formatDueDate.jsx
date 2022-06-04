@@ -23,15 +23,35 @@ function asDateString(date) {
  * @returns {*}
  *  the specified date string formatted as YYYY-MM-DD
  */
-export function formatAsDate(dateString) {
+function formatAsDate(dateString) {
   return dateString.match(dateFormat)[0];
 }
 
+const monthText = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 /**
  *  Format single list item due-date
  */
 function formatDueDate(listItem) {
-  listItem["due-date"] = formatAsDate(listItem["due-date"]);
+  const itmDueDateAsDate = new Date(listItem["due-date"]);
+  listItem["due-date"] = {
+    month: `${itmDueDateAsDate.getMonth()}`,
+    day: `${itmDueDateAsDate.getDate()}`,
+    year: `${itmDueDateAsDate.getFullYear()}`,
+    month_text: `${monthText[itmDueDateAsDate.getMonth()]}`,
+  };
   return listItem;
 }
 
@@ -42,6 +62,6 @@ function formatDueDate(listItem) {
  * @returns {[item]|item}
  *  the specified item(s) with the due-date property formatted as YYYY-MM-DD.
  */
-export default function formatListItemDueDate(items) {
+export default function formatAllDueDates(items) {
   return Array.isArray(items) ? items.map(formatDueDate) : formatDueDate(items);
 }

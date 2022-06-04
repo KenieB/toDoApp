@@ -28,24 +28,68 @@ function TodoListLayout({
     setActiveUser({});
   */
 
-    useEffect(()=>{
-      if(!hasAccessToken || !Object.keys(activeUser).length) {
-        setAppErr(new Error("Unauthorized user. Login for access."));
-        navigate("/enter");
+  useEffect(() => {
+    if (!hasAccessToken || !Object.keys(activeUser).length) {
+      setAppErr(new Error("Unauthorized user. Login for access."));
+      navigate("/enter");
+    }
+  }, [hasAccessToken, activeUser, setAppErr]);
+
+  useEffect(() => {
+    setAppErr(null);
+    const abortController = new AbortController();
+    if (hasAccessToken && Object.keys(activeUser).length) {
+      console.log("api.listTodoForUser");
+      async function loadUserList() {
+        try {
+          const response = await loadList(
+            activeUser.id,
+            abortController.signal
+          );
+          console.log(response);
+          if (listSort === "due-date-asc") {
+            setUserTodoList(response);
+          } else if (listSort === "due-date-desc") {
+            //const listByDueDateDesc = sortItemsByDueDateAsc(response);
+            //setUserTodoList(listByDueDateDesc);
+          } else if (listSort === "title-asc") {
+            const listByTitleAsc = sortItemsByTitleAsc(response);
+            setUserTodoList(listByTitleAsc);
+          } else if (listSort === "title-desc") {
+            const listByTitleDesc = sortItemsByTitleDesc(response);
+            setUserTodoList(listByTitleDesc);
+          } else {
+            setAppErr(new Error("Invalid list sort-by value. Contact admin."));
+          }
+        } catch (error) {
+          setAppErr(error);
+        }
       }
-    })
+      loadUserList();
+      console.log(activeUser);
+      console.log(userTodoList);
+      return () => abortController.abort();
+    } else {
+      hasAccessToken ? setHasAccessToken(false) : setActiveUser({});
+      const authSyncError = new Error(
+        "Session authentication error. Please login again."
+      );
+      setAppErr(authSyncError);
+      navigate("/enter");
+    }
+  }, [activeUser, hasAccessToken, userTodoList, setAppErr]);
   return (
     <>
       <Container
         id="td-list-layout-container"
-        className="d-flex justify-content-center w-100 h-100"
+        className="d-flex justify-content-center w-100 h-100 px-0 px-sm-auto"
       >
-        <Row id="td-list-layout-row" className="w-100">
+        <Row id="td-list-layout-row" className="w-100 flex-fill">
           <Col id="td-list-layout-col" className="d-flex">
             <Container
               fluid
               id="td-list-layout-content-container"
-              className="py-4"
+              className="py-4 px-0 px-sm-auto"
             >
               <Row id="td-list-content-header-row">
                 <h1

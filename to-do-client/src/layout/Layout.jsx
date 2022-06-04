@@ -5,10 +5,10 @@ import { Container, Row, Col } from "react-bootstrap";
 function Layout() {
   return (
     <Row style={{ height: "100vh" }} id="root-layout-row">
-      <Col xs={{ span: 10, offset: 1 }} md={{ span: 8, offset: 2 }} id="root-layout-col">
+      <Col xs={12} md={{ span: 8, offset: 2 }} id="root-layout-col" className="mx-0 mx-sm-auto">
         <Container
           fluid
-          className="bg-light overflow-scroll border border-secondary rounded-3"
+          className="bg-light overflow-scroll border border-secondary rounded-3 px-0 px-sm-auto"
           style={{ height: "85vh", marginTop: "7.5vh" }}
           id="root-layout-container"
         >

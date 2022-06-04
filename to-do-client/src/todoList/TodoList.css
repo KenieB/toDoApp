@@ -1,0 +1,22 @@
+#list-item-date-main {
+    font-variant: small-caps;
+    font-size: 1.5rem;
+    align-self: baseline;
+    margin-top: 0;
+}
+#list-item-date-sub {
+    font-size: 1.3rem;
+    align-self: baseline;
+}
+
+
+
+@media (min-width: 992px) {
+    #list-item-date-main {
+      font-size: 1rem;
+      align-self: center;
+    }
+    #list-item-date-sub {
+      align-self: center;
+  }
+  }

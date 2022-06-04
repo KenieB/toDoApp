@@ -1,4 +1,5 @@
-import formatListItemDueDate from "./formatDueDate";
+import formatAllDueDates from "./formatDueDate";
+
 
 const API_BASE_URL = "http://localhost:5000";
 
@@ -136,5 +137,5 @@ export async function loadList(userId, signal) {
     headers,
     signal,
   };
-  return await fetchJson(url, options, []).then(formatListItemDueDate);
+  return await fetchJson(url, options, []).then(formatAllDueDates);
 }

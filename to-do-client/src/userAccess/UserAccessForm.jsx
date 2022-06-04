@@ -195,6 +195,9 @@ function UserAccessForm({
     return (
       <>
         <Row>
+          <ErrorAlert error={appErr} />
+        </Row>
+        <Row>
           <Col>
             <Form onSubmit={handleSubmitLogin}>
               <Form.Group className="my-3">
@@ -218,12 +221,12 @@ function UserAccessForm({
                 />
               </Form.Group>
               <Row>
-                <Col>
+                <Col className="d-flex justify-content-center py-1">
                   <Button variant="dark" onClick={handleCancel}>
                     Cancel
                   </Button>
                 </Col>
-                <Col>
+                <Col className="d-flex justify-content-center py-1">
                   <Button variant="info" type="submit">
                     Submit
                   </Button>
