@@ -4,6 +4,7 @@ import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { GiExitDoor } from "react-icons/gi";
 import { MdAddTask } from "react-icons/md";
 import { IconContext } from "react-icons";
+import { logoutUser, loadList } from "../utils/api";
 
 function TodoListLayout({
   activeUser,
@@ -27,6 +28,30 @@ function TodoListLayout({
     setAppErr(authSyncError);
     setActiveUser({});
   */
+
+  const handleListExit = (event) => {
+    event.preventDefault();
+    const result = window.confirm(
+      "If you're done with your to-do list for now click 'OK' to logout and return to the home screen.\n\nAny changes have been saved automatically and will be available the next time you log in."
+    );
+    if (result) {
+      async function logOut() {
+        const abortController = new AbortController();
+        try {
+          const clearUserSession = await logoutUser(abortController.signal);
+          setHasAccessToken(false);
+          setActiveUser({});
+          setUserTodoList([]);
+          setListSort("due-date-asc");
+          setAppErr(null);
+          navigate("/");
+        } catch (error) {
+          setAppErr(error);
+        }
+      }
+      logOut();
+    }
+  };
 
   useEffect(() => {
     if (!hasAccessToken || !Object.keys(activeUser).length) {
@@ -66,8 +91,8 @@ function TodoListLayout({
         }
       }
       loadUserList();
-      console.log(activeUser);
-      console.log(userTodoList);
+      console.log(Object.entries(activeUser));
+      console.log(userTodoList.entries());
       return () => abortController.abort();
     } else {
       hasAccessToken ? setHasAccessToken(false) : setActiveUser({});
@@ -77,7 +102,7 @@ function TodoListLayout({
       setAppErr(authSyncError);
       navigate("/enter");
     }
-  }, [activeUser, hasAccessToken, userTodoList, setAppErr]);
+  }, [setUserTodoList, setAppErr]);
   return (
     <>
       <Container
@@ -116,7 +141,7 @@ function TodoListLayout({
                       id="td-list-options-btn-done"
                       className="fs-4 fs-md-2 flex-fill"
                       style={{ fontVariant: "small-caps" }}
-                      onClick={() => console.log("DONE BTN CLICKED")}
+                      onClick={handleListExit}
                     >
                       <IconContext.Provider
                         value={{ size: "2em", title: "save-and-exit" }}
