@@ -51,6 +51,7 @@ function formatDueDate(listItem) {
     day: `${itmDueDateAsDate.getDate()}`,
     year: `${itmDueDateAsDate.getFullYear()}`,
     month_text: `${monthText[itmDueDateAsDate.getMonth()]}`,
+    date_string: `${listItem["due-date"]}`,
   };
   return listItem;
 }

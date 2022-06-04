@@ -41,7 +41,6 @@ export function sortItemsByTitleAsc(items) {
       return 0;
     }
   };
-
   return sort(compareTitle, items);
 }
 
@@ -62,31 +61,33 @@ export function sortItemsByTitleDesc(items) {
       return 0;
     }
   };
-
   return sort(compareTitle, items);
 }
 
 export function sortItemsByDueDateDesc(items) {
   const compareDueDate = (left, right) => {
-    const leftDueDateYear = left["due-date"]
+    console.log(`left: ${left}, right: ${right}`);
+    const leftDueDate = new Date(left["due-date"]["date_string"]);
+    const rightDueDate = new Date(right["due-date"]["date_string"]);
 
-
-
-    const leftTitleSpaces = left.title.toLowerCase();
-    const rightTitleSpaces = right.title.toLowerCase();
-
-    const leftTitle = leftTitleSpaces.replace(/\s+/g, "");
-    const rightTitle = rightTitleSpaces.replace(/\s+/g, "");
-
-    if (leftTitle !== rightTitle) {
-      for (let i = 0; i < leftTitle.length; i++) {
-        if (leftTitle.charCodeAt(i) !== rightTitle.charCodeAt(i)) {
-          return rightTitle.charCodeAt(i) - leftTitle.charCodeAt(i);
-        }
-      }
-      return 0;
+    if (leftDueDate.valueOf() !== rightDueDate.valueOf()) {
+      return rightDueDate.valueOf() - leftDueDate.valueOf();
     }
+    return 0;
   };
+  return sort(compareDueDate, items);
+}
 
-  return sort(compareTitle, items);
+export function sortItemsByDueDateAsc(items) {
+  const compareDueDate = (left, right) => {
+    console.log(`left: ${left}, right: ${right}`);
+    const leftDueDate = new Date(left["due-date"]["date_string"]);
+    const rightDueDate = new Date(right["due-date"]["date_string"]);
+
+    if (leftDueDate.valueOf() !== rightDueDate.valueOf()) {
+      return leftDueDate.valueOf() - rightDueDate.valueOf();
+    }
+    return 0;
+  };
+  return sort(compareDueDate, items);
 }

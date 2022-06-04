@@ -5,6 +5,12 @@ import { GiExitDoor } from "react-icons/gi";
 import { MdAddTask } from "react-icons/md";
 import { IconContext } from "react-icons";
 import { logoutUser, loadList } from "../utils/api";
+import {
+  sortItemsByTitleAsc,
+  sortItemsByTitleDesc,
+  sortItemsByDueDateAsc,
+  sortItemsByDueDateDesc,
+} from "./sortListItems";
 
 function TodoListLayout({
   activeUser,
@@ -21,13 +27,10 @@ function TodoListLayout({
   const navigate = useNavigate();
 
   // listSort possible values: [ "due-date-asc", "due-date-desc", "title-asc", "title-desc" ]
-  const handleSortByChange = ({ target }) => setListSort(target.value);
-
-  /*
-    const authSyncError = new Error("Session authentication error. Please login again.");
-    setAppErr(authSyncError);
-    setActiveUser({});
-  */
+  const handleSortByChange = ({ target }) => {
+    setListSort(target.value);
+    console.log(`previous listSort: ${listSort}`);
+  };
 
   const handleListExit = (event) => {
     event.preventDefault();
@@ -64,19 +67,21 @@ function TodoListLayout({
     setAppErr(null);
     const abortController = new AbortController();
     if (hasAccessToken && Object.keys(activeUser).length) {
-      console.log("api.listTodoForUser");
       async function loadUserList() {
         try {
           const response = await loadList(
             activeUser.id,
             abortController.signal
           );
+
+
           console.log(response);
+          
           if (listSort === "due-date-asc") {
             setUserTodoList(response);
           } else if (listSort === "due-date-desc") {
-            //const listByDueDateDesc = sortItemsByDueDateAsc(response);
-            //setUserTodoList(listByDueDateDesc);
+            const listByDueDateDesc = sortItemsByDueDateDesc(response);
+            setUserTodoList(listByDueDateDesc);
           } else if (listSort === "title-asc") {
             const listByTitleAsc = sortItemsByTitleAsc(response);
             setUserTodoList(listByTitleAsc);
@@ -84,14 +89,13 @@ function TodoListLayout({
             const listByTitleDesc = sortItemsByTitleDesc(response);
             setUserTodoList(listByTitleDesc);
           } else {
-            setAppErr(new Error("Invalid list sort-by value. Contact admin."));
+            throw new Error("List sort error. Contact admin.");
           }
         } catch (error) {
           setAppErr(error);
         }
       }
       loadUserList();
-      console.log(Object.entries(activeUser));
       console.log(userTodoList.entries());
       return () => abortController.abort();
     } else {
@@ -102,7 +106,12 @@ function TodoListLayout({
       setAppErr(authSyncError);
       navigate("/enter");
     }
-  }, [setUserTodoList, setAppErr]);
+  }, [setUserTodoList, setAppErr, listSort]);
+
+  useEffect(() => {
+    console.log(`new listSort: ${listSort}`);
+    
+  }, [listSort, setUserTodoList]);
   return (
     <>
       <Container
