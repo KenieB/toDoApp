@@ -221,13 +221,13 @@ function UserAccessForm({
                 />
               </Form.Group>
               <Row>
-                <Col className="d-flex justify-content-center py-1">
-                  <Button variant="dark" onClick={handleCancel}>
+                <Col className="d-flex justify-content-center py-1 px-3">
+                  <Button variant="dark" onClick={handleCancel} className="flex-fill">
                     Cancel
                   </Button>
                 </Col>
-                <Col className="d-flex justify-content-center py-1">
-                  <Button variant="info" type="submit">
+                <Col className="d-flex justify-content-center py-1 px-3">
+                  <Button variant="info" type="submit" className="flex-fill">
                     Submit
                   </Button>
                 </Col>

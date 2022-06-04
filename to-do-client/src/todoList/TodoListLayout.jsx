@@ -32,6 +32,11 @@ function TodoListLayout({
     console.log(`previous listSort: ${listSort}`);
   };
 
+  const handleAddItemClick = (event) => {
+    event.preventDefault();
+    navigate("/todo/add-to-list");
+  };
+
   const handleListExit = (event) => {
     event.preventDefault();
     const result = window.confirm(
@@ -74,9 +79,8 @@ function TodoListLayout({
             abortController.signal
           );
 
-
           console.log(response);
-          
+
           if (listSort === "due-date-asc") {
             setUserTodoList(response);
           } else if (listSort === "due-date-desc") {
@@ -110,13 +114,12 @@ function TodoListLayout({
 
   useEffect(() => {
     console.log(`new listSort: ${listSort}`);
-    
   }, [listSort, setUserTodoList]);
   return (
     <>
       <Container
         id="td-list-layout-container"
-        className="d-flex justify-content-center w-100 h-100 px-0 px-sm-auto"
+        className="d-flex justify-content-center w-100 h-100 px-0 px-sm-3"
       >
         <Row id="td-list-layout-row" className="w-100 flex-fill">
           <Col id="td-list-layout-col" className="d-flex">
@@ -205,7 +208,7 @@ function TodoListLayout({
                       id="td-list-options-btn-add-item"
                       className="fs-4 fs-md-2 flex-fill"
                       style={{ fontVariant: "small-caps" }}
-                      onClick={() => console.log("ADD ITEM BTN CLICKED")}
+                      onClick={handleAddItemClick}
                     >
                       <IconContext.Provider
                         value={{ size: "2em", title: "add-new-task" }}
