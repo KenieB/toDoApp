@@ -13,7 +13,6 @@
 >>## Built with:
 >>- React
 >>- Bootstrap
->>- jQuery
 >>- PostgreSQL
 >>- Knex
 >>- Express
