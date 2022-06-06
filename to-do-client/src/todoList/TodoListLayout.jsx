@@ -20,12 +20,11 @@ function TodoListLayout({
   setListSort,
   userTodoList,
   setUserTodoList,
-  appErr,
   setAppErr,
-  newItemFlag,
-  setNewItemFlag,
   deleteItemFlag,
   setDeleteItemFlag,
+  newTagFlag,
+  setNewTagFlag,
 }) {
   const navigate = useNavigate();
 
@@ -58,7 +57,7 @@ function TodoListLayout({
   // listSort possible values: [ "due-date-asc", "due-date-desc", "title-asc", "title-desc" ]
   const handleSortByChange = ({ target }) => {
     setListSort(target.value);
-    console.log(`previous listSort: ${listSort}`);
+    //console.log(`previous listSort: ${listSort}`);
   };
 
   const handleAddItemClick = (event) => {
@@ -113,6 +112,16 @@ function TodoListLayout({
     }
   }, [setUserTodoList, setAppErr, listSort]);
 
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    if (newTagFlag) {
+      loadUserList();
+      setNewTagFlag(false);
+      return () => abortController.abort();
+    }
+  }, [newTagFlag]);
+
   useEffect(() => {
     const abortController = new AbortController();
     if (deleteItemFlag) {
@@ -121,6 +130,8 @@ function TodoListLayout({
       return () => abortController.abort();
     }
   }, [deleteItemFlag]);
+
+  
 
   /* useEffect(() => {
     console.log("------------ TodoListLayout useEffect.2 ------------");

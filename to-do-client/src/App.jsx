@@ -21,6 +21,7 @@ function App() {
   const [appErr, setAppErr] = useState(null);
   const [newItemFlag, setNewItemFlag] = useState(false);
   const [deleteItemFlag, setDeleteItemFlag] = useState(false);
+  const [newTagFlag, setNewTagFlag] = useState(false);
 
   return (
     <Container
@@ -110,6 +111,8 @@ function App() {
                 setNewItemFlag={setNewItemFlag}
                 deleteItemFlag={deleteItemFlag}
                 setDeleteItemFlag={setDeleteItemFlag}
+                newTagFlag={newTagFlag}
+                setNewTagFlag={setNewTagFlag}
               />
             }
           >
@@ -129,6 +132,8 @@ function App() {
                   setAppErr={setAppErr}
                   deleteItemFlag={deleteItemFlag}
                   setDeleteItemFlag={setDeleteItemFlag}
+                  newTagFlag={newTagFlag}
+                  setNewTagFlag={setNewTagFlag}
                 />
               }
             />

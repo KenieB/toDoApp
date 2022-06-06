@@ -100,7 +100,7 @@ function AddToList({
   }
 
   useEffect(() => {
-    console.log(`AddToList useEffect - newItemFlag: ${newItemFlag}`);
+    //console.log(`AddToList useEffect - newItemFlag: ${newItemFlag}`);
     if (newItemFlag) {
       setAppErr(null);
       loadUserList();

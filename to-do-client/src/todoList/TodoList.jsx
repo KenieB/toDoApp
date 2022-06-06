@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -11,12 +11,13 @@ import {
   Image,
   InputGroup,
   Form,
+  Modal,
 } from "react-bootstrap";
 import ErrorAlert from "../utils/ErrorAlert";
 import { IoTrashBin, IoCalendarClear } from "react-icons/io5";
 import { BsPlusSquareDotted, BsFillCalendarFill } from "react-icons/bs";
 import { IconContext } from "react-icons";
-import { loadList, addNewTag, deleteListItem } from "../utils/api";
+import { addNewTag, deleteListItem } from "../utils/api";
 import "./TodoList.css";
 
 function TodoList({
@@ -32,20 +33,80 @@ function TodoList({
   setAppErr,
   deleteItemFlag,
   setDeleteItemFlag,
+  newTagFlag,
+  setNewTagFlag,
 }) {
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+
+  const [newTagData, setNewTagData] = useState("");
+  const [tagModalItmId, setTagModalItmId] = useState("");
+
+  const handleClose = () => {
+    setTagModalItmId("");
+    setNewTagData("");
+    setShow(false);
+  };
+  const handleShow = (event) => {
+    const itmIdName = event.target.id;
+    const parseItmId = itmIdName.substring(7);
+    //console.log("handleShow event");
+    //console.log(parseItmId);
+    setTagModalItmId(parseItmId);
+    setShow(true);
+  };
+
+  const handleNewTagFormChange = (event) => {
+    setNewTagData(event.target.value);
+    /*console.log(
+      "--------------------------- newTagData handleNewTagFormChange ---------------------------"
+    );
+    console.log(`tagModalItmId: ${tagModalItmId}`);
+    console.log(newTagData);
+    console.log(
+      "-----------------------------------------------------------------------------"
+    );*/
+  };
 
   const addTagClickHandler = (event) => {
     event.preventDefault();
-    console.log("ADD TAG CLICKED");
-    /*
-      Modal > Add Tag: 
-    */
+    const abortController = new AbortController();
+
+    const dataForNewTag = {
+      item_id: tagModalItmId,
+      new_tag: newTagData.trim(),
+    };
+
+    /*console.log(
+      "--------------------------- addTagClickHandler ---------------------------"
+    );
+    console.log(dataForNewTag);
+    console.log(
+      "--------------------------------------------------------------------------"
+    );*/
+
+    async function addTagToListItem() {
+      try {
+        const response = await addNewTag(
+          activeUser.id,
+          dataForNewTag,
+          abortController.signal
+        );
+        setNewTagFlag(true);
+      } catch (error) {
+        setAppErr(error);
+      }
+    }
+
+    addTagToListItem();
+    setShow(false);
+
+    return () => abortController.abort();
   };
 
   const deleteItemClickHandler = (event) => {
     event.preventDefault();
-    console.log(event.target.name.substring(4));
+    //console.log(event.target.name.substring(4));
     const result = window.confirm(
       "Are you sure you want to delete this item?\n\nThis cannot be undone."
     );
@@ -77,7 +138,33 @@ function TodoList({
   };
 
   const todoList = userTodoList.map((user_td_item) => (
-    <Container fluid className="px-0" key={user_td_item.td_item_id}>
+    <Container
+      fluid
+      className="px-0"
+      key={user_td_item.td_item_id}
+      id={user_td_item.td_item_id}
+    >
+      <Container>
+        <Modal show={show} onHide={handleClose} animation={false}>
+          <Modal.Header closeButton>
+            <Modal.Title id="add-tag-to-list-item-title">Add Tag</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Control
+              required
+              type="text"
+              placeholder="Enter new tag"
+              onChange={handleNewTagFormChange}
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="info" onClick={addTagClickHandler}>
+              Save Tag
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </Container>
+
       <Row className="border-bottom">
         <Col className="px-0">
           <Card className="border-0">
@@ -134,11 +221,15 @@ function TodoList({
                       variant="secondary"
                       style={{ width: "10%" }}
                       className="text-light px-0"
+                      onClick={handleShow}
+                      id={`addTag_${user_td_item.td_item_id}`}
                     >
                       <IconContext.Provider
                         value={{ size: "1.3em", title: "add-list-item-tag" }}
                       >
-                        <BsPlusSquareDotted />
+                        <BsPlusSquareDotted
+                          id={`addTag_${user_td_item.td_item_id}`}
+                        />
                       </IconContext.Provider>
                     </Button>
                   </InputGroup>
@@ -172,11 +263,18 @@ function TodoList({
     </Container>
   ));
 
-  useEffect(() => {}, [deleteItemFlag]);
+  useEffect(() => {
+    if (newTagFlag) {
+      navigate("/todo/list");
+    }
+  }, [newTagFlag]);
 
   return (
     <>
       <Container fluid className="py-5 px-0">
+        <Row>
+          <ErrorAlert error={appErr} />
+        </Row>
         <Row>
           <Col className="border border-3 border-secondary rounded-3">
             <CardGroup>{todoList}</CardGroup>
