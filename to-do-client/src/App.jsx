@@ -19,6 +19,7 @@ function App() {
   const [userTodoList, setUserTodoList] = useState([]);
   const [listSort, setListSort] = useState("due-date-asc");
   const [appErr, setAppErr] = useState(null);
+  const [newItemFlag, setNewItemFlag] = useState(false);
 
   return (
     <Container
@@ -104,6 +105,8 @@ function App() {
                 setUserTodoList={setUserTodoList}
                 appErr={appErr}
                 setAppErr={setAppErr}
+                newItemFlag={newItemFlag}
+                setNewItemFlag={setNewItemFlag}
               />
             }
           >
@@ -137,6 +140,8 @@ function App() {
                   setUserTodoList={setUserTodoList}
                   appErr={appErr}
                   setAppErr={setAppErr}
+                  newItemFlag={newItemFlag}
+                  setNewItemFlag={setNewItemFlag}
                 />
               }
             />

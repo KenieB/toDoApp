@@ -1,6 +1,5 @@
 import formatAllDueDates from "./formatDueDate";
 
-
 const API_BASE_URL = "http://localhost:5000";
 
 /**
@@ -26,21 +25,28 @@ headers.append("Content-Type", "application/json");
  */
 async function fetchJson(url, options, onCancel) {
   try {
-    const response = await fetch(url, options)
-      .then((response) => {
-        // Inspect the headers in the response
-        response.headers.forEach(console.log);
-        // OR you can do this
-        for (let entry of response.headers.entries()) {
-          console.log(entry);
-        }
-        return response;
-      })
-      .catch((err) => console.error(err));
+    const response = await fetch(url, options);
+
+    /*
+     ** (logging for api debugging)
+     **
+     **  .then((response) => {
+     **    // Inspect the headers in the response
+     **    response.headers.forEach(console.log);
+     **    // OR you can do this
+     **    for (let entry of response.headers.entries()) {
+     **      console.log(entry);
+     **    }
+     **    return response;
+     **  })
+     **  .catch((err) => console.error(err));
+     */
+
     if (response.status === 204) {
       return null;
     }
     const payload = await response.json();
+
     if (payload.error) {
       return Promise.reject({ message: payload.error });
     }
@@ -140,3 +146,25 @@ export async function loadList(userId, signal) {
   return await fetchJson(url, options, []).then(formatAllDueDates);
 }
 
+/**
+ * Retrieves existing to-do list items for user with specified `userId`
+ * @param {string<userId>}
+ *  the `user_id` matching desired to-do list items(s)
+ * @param {AbortController.signal<signal>}
+ *  optional AbortController.signal
+ * @returns {Promise<[toDoList]>}
+ *  a promise that resolves to a possibly empty array of to-do list items with `user_id`===`userId` saved in the database.
+ */
+
+export async function addToList(userId, newItem, signal) {
+  const url = new URL(`${API_BASE_URL}/to-do/${userId}`);
+  const options = {
+    mode: "cors",
+    credentials: "include",
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: newItem }),
+    signal,
+  };
+  return await fetchJson(url, options, []).then(formatAllDueDates);
+}

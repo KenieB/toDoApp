@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { GiExitDoor } from "react-icons/gi";
@@ -8,7 +8,6 @@ import { logoutUser, loadList } from "../utils/api";
 import {
   sortItemsByTitleAsc,
   sortItemsByTitleDesc,
-  sortItemsByDueDateAsc,
   sortItemsByDueDateDesc,
 } from "./sortListItems";
 
@@ -23,6 +22,8 @@ function TodoListLayout({
   setUserTodoList,
   appErr,
   setAppErr,
+  newItemFlag,
+  setNewItemFlag,
 }) {
   const navigate = useNavigate();
 
@@ -79,8 +80,6 @@ function TodoListLayout({
             abortController.signal
           );
 
-          console.log(response);
-
           if (listSort === "due-date-asc") {
             setUserTodoList(response);
           } else if (listSort === "due-date-desc") {
@@ -95,12 +94,24 @@ function TodoListLayout({
           } else {
             throw new Error("List sort error. Contact admin.");
           }
+
+          if (response) {
+            console.log("------------ TodoListLayout useEffect ------------");
+            console.log("................... (response) ...................");
+            console.log(Object.entries(response));
+            console.log("..................................................");
+            console.log("................. (userTodoList) .................");
+            userTodoList.forEach((itm) => console.log(itm));
+            console.log(Date.now());
+            console.log("--------------------------------------------------");
+          }
         } catch (error) {
           setAppErr(error);
         }
       }
+      
       loadUserList();
-      console.log(userTodoList.entries());
+
       return () => abortController.abort();
     } else {
       hasAccessToken ? setHasAccessToken(false) : setActiveUser({});
@@ -113,8 +124,19 @@ function TodoListLayout({
   }, [setUserTodoList, setAppErr, listSort]);
 
   useEffect(() => {
+    console.log("------------ TodoListLayout useEffect.2 ------------");
     console.log(`new listSort: ${listSort}`);
-  }, [listSort, setUserTodoList]);
+    console.log(Date.now());
+    console.log("----------------------------------------------------");
+  }, [listSort]);
+
+  useEffect(() => {
+    console.log("------------ TodoListLayout useEffect.3 ------------");
+    console.log("................. (userTodoList) .................");
+    userTodoList.forEach((itm) => console.log(itm));
+    console.log(Date.now());
+    console.log("----------------------------------------------------");
+  }, [userTodoList]);
   return (
     <>
       <Container

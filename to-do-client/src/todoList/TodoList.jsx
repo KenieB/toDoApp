@@ -13,11 +13,9 @@ import {
   Form,
 } from "react-bootstrap";
 import ErrorAlert from "../utils/ErrorAlert";
-import { sortItemsByTitleAsc, sortItemsByTitleDesc } from "./sortListItems";
 import { IoTrashBin, IoCalendarClear } from "react-icons/io5";
 import { BsPlusSquareDotted, BsFillCalendarFill } from "react-icons/bs";
 import { IconContext } from "react-icons";
-import formatAllDueDates from "../utils/formatDueDate";
 //import { loadList, addNewTag, deleteListItem } from "../utils/api";
 import "./TodoList.css";
 
@@ -46,10 +44,10 @@ function TodoList({
   };
 
   const todoList = userTodoList.map((user_td_item) => (
-    <Container fluid className="px-0">
+    <Container fluid className="px-0" key={user_td_item.td_item_id}>
       <Row className="border-bottom">
         <Col className="px-0">
-          <Card key={user_td_item.td_item_id} className="border-0">
+          <Card className="border-0">
             <Row>
               <Col xs={12} lg={9} className="pe-0">
                 <Card.Body>

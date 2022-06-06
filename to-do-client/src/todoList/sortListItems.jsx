@@ -46,11 +46,11 @@ export function sortItemsByTitleAsc(items) {
 
 export function sortItemsByTitleDesc(items) {
   const compareTitle = (left, right) => {
-    const leftTitleSpaces = left.title.toLowerCase();
-    const rightTitleSpaces = right.title.toLowerCase();
+    const leftTitle = left.title.toLowerCase();
+    const rightTitle = right.title.toLowerCase();
 
-    const leftTitle = leftTitleSpaces.replace(/\s+/g, "");
-    const rightTitle = rightTitleSpaces.replace(/\s+/g, "");
+    //const leftTitle = leftTitleSpaces.replace(/\s+/g, "");
+    //const rightTitle = rightTitleSpaces.replace(/\s+/g, "");
 
     if (leftTitle !== rightTitle) {
       for (let i = 0; i < leftTitle.length; i++) {
@@ -78,7 +78,7 @@ export function sortItemsByDueDateDesc(items) {
   return sort(compareDueDate, items);
 }
 
-export function sortItemsByDueDateAsc(items) {
+function sortItemsByDueDateAsc(items) {
   const compareDueDate = (left, right) => {
     console.log(`left: ${left}, right: ${right}`);
     const leftDueDate = new Date(left["due-date"]["date_string"]);

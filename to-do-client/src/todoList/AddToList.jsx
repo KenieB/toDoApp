@@ -1,18 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import {
-  Container,
-  Row,
-  Col,
-  CardGroup,
-  Card,
-  ListGroup,
-  Button,
-  Image,
-  Form,
-} from "react-bootstrap";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import ErrorAlert from "../utils/ErrorAlert";
-//import { addToList } from "../utils/api";
+import { addToList, loadList } from "../utils/api";
+import {
+  sortItemsByTitleAsc,
+  sortItemsByTitleDesc,
+  sortItemsByDueDateDesc,
+} from "./sortListItems";
 
 function AddToList({
   activeUser,
@@ -24,22 +19,96 @@ function AddToList({
   setUserTodoList,
   appErr,
   setAppErr,
+  newItemFlag,
+  setNewItemFlag,
 }) {
   const navigate = useNavigate();
   const initNewItem = {
     title: "",
     description: "",
-    "due-date": "",
+    due_date: "",
   };
   const [formData, setFormData] = useState(initNewItem);
+
   const handleChange = ({ target }) => {
-    setAppErr(null);
     setFormData({
       ...formData,
       [target.id]: target.value,
     });
-    console.log(formData);
   };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const abortController = new AbortController();
+
+    async function createNewListItem() {
+      try {
+        const newTdItem = {
+          ...formData,
+        };
+        /*console.log(
+          "--------------- AddToList (submitted item) ---------------"
+        );
+        console.log(Object.entries(newTdItem));
+        console.log(
+          "----------------------------------------------------------"
+        );*/
+        const response = await addToList(
+          activeUser.id,
+          newTdItem,
+          abortController.signal
+        );
+        /*.then((data) => {
+          setNewItemFlag(true);
+          return data;
+        });*/
+      } catch (error) {
+        setAppErr(error);
+      }
+    }
+
+    createNewListItem();
+    setNewItemFlag(true);
+    //navigate("/todo/list");
+    return () => abortController.abort();
+  };
+
+  async function loadUserList() {
+    const abortController = new AbortController();
+    try {
+      const response = await loadList(activeUser.id, abortController.signal);
+
+      if (listSort === "due-date-asc") {
+        setUserTodoList(response);
+      } else if (listSort === "due-date-desc") {
+        const listByDueDateDesc = sortItemsByDueDateDesc(response);
+        setUserTodoList(listByDueDateDesc);
+      } else if (listSort === "title-asc") {
+        const listByTitleAsc = sortItemsByTitleAsc(response);
+        setUserTodoList(listByTitleAsc);
+      } else if (listSort === "title-desc") {
+        const listByTitleDesc = sortItemsByTitleDesc(response);
+        setUserTodoList(listByTitleDesc);
+      } else {
+        throw new Error("List sort error. Contact admin.");
+      }
+    } catch (error) {
+      setAppErr(error);
+    }
+
+    return userTodoList;
+  }
+
+  useEffect(() => {
+    console.log(`AddToList useEffect - newItemFlag: ${newItemFlag}`);
+    if (newItemFlag) {
+      setAppErr(null);
+      loadUserList();
+      setNewItemFlag(false);
+      navigate("/todo/list");
+    }
+  }, [newItemFlag]);
+
   return (
     <>
       <Container fluid id="add-to-list-form-container" className="py-5 px-0">
@@ -50,7 +119,7 @@ function AddToList({
             id="add-to-list-form-col"
             className="border border-3 border-secondary rounded-3"
           >
-            <Form id="add-to-list-form" onSubmit={() => console.log(formData)}>
+            <Form id="add-to-list-form" onSubmit={handleSubmit}>
               <Form.Group className="my-3" controlId="title">
                 <Form.Label>Title</Form.Label>
                 <Form.Control
@@ -70,7 +139,7 @@ function AddToList({
                   onChange={handleChange}
                 />
               </Form.Group>
-              <Form.Group className="my-3" controlId="due-date">
+              <Form.Group className="my-3" controlId="due_date">
                 <Form.Label>Due Date</Form.Label>
                 <Form.Control required type="date" onChange={handleChange} />
               </Form.Group>
@@ -93,7 +162,7 @@ function AddToList({
                     <Button
                       variant="warning"
                       type="submit"
-                      className="flex-fill fw-bold fs-4 py-0 fst-italic"
+                      className="flex-fill fs-4 py-0 fst-italic"
                       style={{
                         fontVariant: "small-caps",
                         letterSpacing: "0.5rem",
