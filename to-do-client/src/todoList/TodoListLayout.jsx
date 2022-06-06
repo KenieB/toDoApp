@@ -51,7 +51,7 @@ function TodoListLayout({
       setAppErr(error);
     }
 
-    return userTodoList;
+    return () => abortController.abort();
   }
 
   // listSort possible values: [ "due-date-asc", "due-date-desc", "title-asc", "title-desc" ]
@@ -113,14 +113,14 @@ function TodoListLayout({
   }, [setUserTodoList, setAppErr, listSort]);
 
 
-  useEffect(() => {
+ /* useEffect(() => {
     const abortController = new AbortController();
     if (newTagFlag) {
       loadUserList();
       setNewTagFlag(false);
       return () => abortController.abort();
     }
-  }, [newTagFlag]);
+  }, [newTagFlag]);*/
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -129,9 +129,13 @@ function TodoListLayout({
       setDeleteItemFlag(false);
       return () => abortController.abort();
     }
-  }, [deleteItemFlag]);
+    if(newTagFlag) {
+      loadUserList();
+      setNewTagFlag(false);
+      return () => abortController.abort();
+    }
+  }, [deleteItemFlag, newTagFlag]);
 
-  
 
   /* useEffect(() => {
     console.log("------------ TodoListLayout useEffect.2 ------------");

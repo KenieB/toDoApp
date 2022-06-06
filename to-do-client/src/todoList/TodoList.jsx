@@ -17,7 +17,12 @@ import ErrorAlert from "../utils/ErrorAlert";
 import { IoTrashBin, IoCalendarClear } from "react-icons/io5";
 import { BsPlusSquareDotted, BsFillCalendarFill } from "react-icons/bs";
 import { IconContext } from "react-icons";
-import { addNewTag, deleteListItem } from "../utils/api";
+import { loadList, addNewTag, deleteListItem } from "../utils/api";
+import {
+  sortItemsByTitleAsc,
+  sortItemsByTitleDesc,
+  sortItemsByDueDateDesc,
+} from "./sortListItems";
 import "./TodoList.css";
 
 function TodoList({
@@ -91,15 +96,19 @@ function TodoList({
           activeUser.id,
           dataForNewTag,
           abortController.signal
-        );
+        ).then(() => setShow(false));
         setNewTagFlag(true);
+        navigate("/todo/list");
       } catch (error) {
         setAppErr(error);
       }
     }
 
     addTagToListItem();
-    setShow(false);
+
+    //setNewTagFlag(true);
+
+    //setShow(false);
 
     return () => abortController.abort();
   };
@@ -263,12 +272,44 @@ function TodoList({
     </Container>
   ));
 
-  useEffect(() => {
-    if (newTagFlag) {
-      navigate("/todo/list");
-    }
-  }, [newTagFlag]);
+  async function loadUserList() {
+    const abortController = new AbortController();
+    try {
+      const response = await loadList(activeUser.id, abortController.signal);
 
+      if (listSort === "due-date-asc") {
+        setUserTodoList(response);
+      } else if (listSort === "due-date-desc") {
+        const listByDueDateDesc = sortItemsByDueDateDesc(response);
+        setUserTodoList(listByDueDateDesc);
+      } else if (listSort === "title-asc") {
+        const listByTitleAsc = sortItemsByTitleAsc(response);
+        setUserTodoList(listByTitleAsc);
+      } else if (listSort === "title-desc") {
+        const listByTitleDesc = sortItemsByTitleDesc(response);
+        setUserTodoList(listByTitleDesc);
+      } else {
+        throw new Error("List sort error. Contact admin.");
+      }
+    } catch (error) {
+      setAppErr(error);
+    }
+
+    return () => abortController.abort();
+  }
+
+  /*useEffect(() => {
+    if (newTagFlag) {
+      console.log("newTagFlag useEffect");
+      console.log(newTagFlag);
+      setAppErr(null);
+
+      loadUserList();
+      console.log();
+      //.then(() => navigate("/todo/list"));
+      //navigate("/todo/list");
+    }
+  }, [newTagFlag]);*/
   return (
     <>
       <Container fluid className="py-5 px-0">
