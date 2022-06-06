@@ -24,8 +24,36 @@ function TodoListLayout({
   setAppErr,
   newItemFlag,
   setNewItemFlag,
+  deleteItemFlag,
+  setDeleteItemFlag,
 }) {
   const navigate = useNavigate();
+
+  async function loadUserList() {
+    const abortController = new AbortController();
+    try {
+      const response = await loadList(activeUser.id, abortController.signal);
+
+      if (listSort === "due-date-asc") {
+        setUserTodoList(response);
+      } else if (listSort === "due-date-desc") {
+        const listByDueDateDesc = sortItemsByDueDateDesc(response);
+        setUserTodoList(listByDueDateDesc);
+      } else if (listSort === "title-asc") {
+        const listByTitleAsc = sortItemsByTitleAsc(response);
+        setUserTodoList(listByTitleAsc);
+      } else if (listSort === "title-desc") {
+        const listByTitleDesc = sortItemsByTitleDesc(response);
+        setUserTodoList(listByTitleDesc);
+      } else {
+        throw new Error("List sort error. Contact admin.");
+      }
+    } catch (error) {
+      setAppErr(error);
+    }
+
+    return userTodoList;
+  }
 
   // listSort possible values: [ "due-date-asc", "due-date-desc", "title-asc", "title-desc" ]
   const handleSortByChange = ({ target }) => {
@@ -73,45 +101,7 @@ function TodoListLayout({
     setAppErr(null);
     const abortController = new AbortController();
     if (hasAccessToken && Object.keys(activeUser).length) {
-      async function loadUserList() {
-        try {
-          const response = await loadList(
-            activeUser.id,
-            abortController.signal
-          );
-
-          if (listSort === "due-date-asc") {
-            setUserTodoList(response);
-          } else if (listSort === "due-date-desc") {
-            const listByDueDateDesc = sortItemsByDueDateDesc(response);
-            setUserTodoList(listByDueDateDesc);
-          } else if (listSort === "title-asc") {
-            const listByTitleAsc = sortItemsByTitleAsc(response);
-            setUserTodoList(listByTitleAsc);
-          } else if (listSort === "title-desc") {
-            const listByTitleDesc = sortItemsByTitleDesc(response);
-            setUserTodoList(listByTitleDesc);
-          } else {
-            throw new Error("List sort error. Contact admin.");
-          }
-
-          if (response) {
-            console.log("------------ TodoListLayout useEffect ------------");
-            console.log("................... (response) ...................");
-            console.log(Object.entries(response));
-            console.log("..................................................");
-            console.log("................. (userTodoList) .................");
-            userTodoList.forEach((itm) => console.log(itm));
-            console.log(Date.now());
-            console.log("--------------------------------------------------");
-          }
-        } catch (error) {
-          setAppErr(error);
-        }
-      }
-      
       loadUserList();
-
       return () => abortController.abort();
     } else {
       hasAccessToken ? setHasAccessToken(false) : setActiveUser({});
@@ -124,6 +114,15 @@ function TodoListLayout({
   }, [setUserTodoList, setAppErr, listSort]);
 
   useEffect(() => {
+    const abortController = new AbortController();
+    if (deleteItemFlag) {
+      loadUserList();
+      setDeleteItemFlag(false);
+      return () => abortController.abort();
+    }
+  }, [deleteItemFlag]);
+
+  /* useEffect(() => {
     console.log("------------ TodoListLayout useEffect.2 ------------");
     console.log(`new listSort: ${listSort}`);
     console.log(Date.now());
@@ -136,7 +135,7 @@ function TodoListLayout({
     userTodoList.forEach((itm) => console.log(itm));
     console.log(Date.now());
     console.log("----------------------------------------------------");
-  }, [userTodoList]);
+  }, [userTodoList]);*/
   return (
     <>
       <Container

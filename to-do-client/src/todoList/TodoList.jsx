@@ -16,7 +16,7 @@ import ErrorAlert from "../utils/ErrorAlert";
 import { IoTrashBin, IoCalendarClear } from "react-icons/io5";
 import { BsPlusSquareDotted, BsFillCalendarFill } from "react-icons/bs";
 import { IconContext } from "react-icons";
-//import { loadList, addNewTag, deleteListItem } from "../utils/api";
+import { loadList, addNewTag, deleteListItem } from "../utils/api";
 import "./TodoList.css";
 
 function TodoList({
@@ -30,17 +30,50 @@ function TodoList({
   setUserTodoList,
   appErr,
   setAppErr,
+  deleteItemFlag,
+  setDeleteItemFlag,
 }) {
   const navigate = useNavigate();
 
   const addTagClickHandler = (event) => {
     event.preventDefault();
     console.log("ADD TAG CLICKED");
+    /*
+      Modal > Add Tag: 
+    */
   };
 
   const deleteItemClickHandler = (event) => {
     event.preventDefault();
-    console.log("DELETE ITEM CLICKED");
+    console.log(event.target.name.substring(4));
+    const result = window.confirm(
+      "Are you sure you want to delete this item?\n\nThis cannot be undone."
+    );
+    if (result) {
+      const deleteItemName = event.target.name;
+      const deleteItemId = deleteItemName.substring(4);
+      const deleteItm = {
+        item_id: deleteItemId,
+      };
+      async function deleteFromList() {
+        const abortController = new AbortController();
+        try {
+          const deleteAndList = await deleteListItem(
+            activeUser.id,
+            deleteItm,
+            abortController.signal
+          );
+          setDeleteItemFlag(true);
+          navigate("/todo/list");
+        } catch (error) {
+          setAppErr(error);
+        }
+      }
+
+      deleteFromList();
+
+      return () => abortController.abort();
+    }
   };
 
   const todoList = userTodoList.map((user_td_item) => (
@@ -117,7 +150,12 @@ function TodoList({
                     fluid
                     className="d-flex justify-content-center px-0"
                   >
-                    <Button variant="danger" className="w-100">
+                    <Button
+                      variant="danger"
+                      className="w-100"
+                      onClick={deleteItemClickHandler}
+                      name={`del_${user_td_item.td_item_id}`}
+                    >
                       <IconContext.Provider
                         value={{ size: "2em", title: "delete-list-item" }}
                       >
@@ -133,6 +171,8 @@ function TodoList({
       </Row>
     </Container>
   ));
+
+  useEffect(() => {}, [deleteItemFlag]);
 
   return (
     <>

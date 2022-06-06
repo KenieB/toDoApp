@@ -20,6 +20,7 @@ function App() {
   const [listSort, setListSort] = useState("due-date-asc");
   const [appErr, setAppErr] = useState(null);
   const [newItemFlag, setNewItemFlag] = useState(false);
+  const [deleteItemFlag, setDeleteItemFlag] = useState(false);
 
   return (
     <Container
@@ -107,6 +108,8 @@ function App() {
                 setAppErr={setAppErr}
                 newItemFlag={newItemFlag}
                 setNewItemFlag={setNewItemFlag}
+                deleteItemFlag={deleteItemFlag}
+                setDeleteItemFlag={setDeleteItemFlag}
               />
             }
           >
@@ -124,6 +127,8 @@ function App() {
                   setUserTodoList={setUserTodoList}
                   appErr={appErr}
                   setAppErr={setAppErr}
+                  deleteItemFlag={deleteItemFlag}
+                  setDeleteItemFlag={setDeleteItemFlag}
                 />
               }
             />

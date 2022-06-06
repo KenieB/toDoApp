@@ -147,13 +147,15 @@ export async function loadList(userId, signal) {
 }
 
 /**
- * Retrieves existing to-do list items for user with specified `userId`
+ * Add new item to to-do list for user with specified `userId`
  * @param {string<userId>}
  *  the `user_id` matching desired to-do list items(s)
+ * @param {object<newItem>}
+ *  the new item to add to the list for user in database
  * @param {AbortController.signal<signal>}
  *  optional AbortController.signal
- * @returns {Promise<[toDoList]>}
- *  a promise that resolves to a possibly empty array of to-do list items with `user_id`===`userId` saved in the database.
+ * @returns {Promise<{newItem}>}
+ *  a promise that resolves to the new to-do list items for `user_id`===`userId` saved in the database.
  */
 
 export async function addToList(userId, newItem, signal) {
@@ -164,6 +166,56 @@ export async function addToList(userId, newItem, signal) {
     method: "POST",
     headers,
     body: JSON.stringify({ data: newItem }),
+    signal,
+  };
+  return await fetchJson(url, options, []).then(formatAllDueDates);
+}
+
+/**
+ * Delete to-do list item for user with specified `userId`
+ * @param {string<userId>}
+ *  the `user_id` matching desired to-do list items(s)
+ * @param {string<item_id>}
+ *  the to-do list item id to delete from the list for user in database
+ * @param {AbortController.signal<signal>}
+ *  optional AbortController.signal
+ * @returns {Promise<[toDoList]>}
+ *  a promise that resolves to a possibly empty array of to-do list items with `user_id`===`userId` saved in the database (without now-deleted specified item).
+ */
+
+ export async function deleteListItem(userId, item_id, signal) {
+  const url = new URL(`${API_BASE_URL}/to-do/${userId}`);
+  const options = {
+    mode: "cors",
+    credentials: "include",
+    method: "DELETE",
+    headers,
+    body: JSON.stringify({ data: item_id }),
+    signal,
+  };
+  return await fetchJson(url, options, []).then(formatAllDueDates);
+}
+
+/**
+ * Add new tag to specified existing to-do list item for user with specified `userId`
+ * @param {string<userId>}
+ *  the `user_id` matching desired to-do list items(s)
+ * @param {object<newTagForItm>}
+ *  the new tag and item id to update the to-do list item for user in database
+ * @param {AbortController.signal<signal>}
+ *  optional AbortController.signal
+ * @returns {Promise<{updateItem}>}
+ *  a promise that resolves to the updated to-do list items for `user_id`===`userId` saved in the database.
+ */
+
+ export async function addNewTag(userId, newTagForItm, signal) {
+  const url = new URL(`${API_BASE_URL}/to-do/${userId}/tags`);
+  const options = {
+    mode: "cors",
+    credentials: "include",
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: newTagForItm }),
     signal,
   };
   return await fetchJson(url, options, []).then(formatAllDueDates);

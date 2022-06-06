@@ -206,7 +206,7 @@ async function updateTags(req, res) {
 
 async function destroy(req, res) {
   const methodName = "destroy";
-  rkeq.log.debug({ __filename, methodName, table: res.locals.table });
+  req.log.debug({ __filename, methodName, table: res.locals.table });
 
   const itemId = res.locals.itemId;
   await todoItemsService.delete(itemId);
