@@ -1,7 +1,7 @@
 
 # ToDo List App
 > This app is a local-use, cloud-storage-based multiple-user to-do list.
-> There is not a publicly deployed version of this app at this time.
+> There is not a publicly deployed version of this app at this time. Please install locally to demo independently.
 > 
 > Functionality includes:
 > - User access and management
